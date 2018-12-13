@@ -1,12 +1,15 @@
-app.route('/task/:id')
-    .get(cors(), function (req, res) {
-        var title = req.params.title;
-        var description = req.params.description;
-        res.send("get" + title + '?value=' + description);
-    })
-    .post(cors(), function (req, res) {
-        var title = req.params.title;
-        var description = req.params.description; 
-        res.send("post" + title + '/' + description);
-    })
+'use strict';
+    module.exports = function(app) {
+      var List = require('../controllers/tasks.js');
     
+      // todoList Routes
+      app.route('/tasks')
+        .get(List.list_all_tasks)
+        .post(List.create_a_task);
+    
+    
+      app.route('/tasks/:taskId')
+        .get(List.read_a_task)
+        .put(List.update_a_task)
+        .delete(List.delete_a_task);
+    };
