@@ -1,21 +1,20 @@
 'use strict';
-
-
 var mongoose = require('mongoose'),
-  Task = mongoose.model('Tasks');
+Task = mongoose.model('Tasks');
 
-exports.list_all_tasks = function(req, res) {
+exports.list_all_tasks = function(req, res) { //listar todos los registros
   Task.find({}, function(err, task) { //aqui find para buscar registro
     if (err){
       res.send(err);
     }
-    console.log("list all");
-    res.json(task);
+    if(task){
+      console.log("list all");
+      res.json(task);
+    }else{
+      res.send("no hay registros!");
+    }
   });
 };
-
-
-
 
 exports.create_a_task = function(req, res) {
   var new_task = new Task(req.body);
@@ -24,8 +23,12 @@ exports.create_a_task = function(req, res) {
     {
       res.send(err);
     }
-    console.log("created");
-    res.json(task);
+    if(task){
+      console.log("created");
+      res.json(task);
+    }else{
+      res.send("registro no se agregó")
+    }
   });
 };
 
@@ -52,15 +55,16 @@ exports.update_a_task = function(req, res) {
       {
         res.send(err);
       }
-      console.log("updated")
-    res.json(task);
+      if(task)
+      {
+        console.log("updated")
+        res.json(task);
+      }
   });
 };
 
 
 exports.delete_a_task = function(req, res) {
-
-
   Task.deleteOne({ //borra registro
     _id: req.params.taskId
   }, function(err, task) {
@@ -68,8 +72,10 @@ exports.delete_a_task = function(req, res) {
       {
         res.send(err);
       }
-      console.log("deleted!")
-    res.json({ message: 'Borrado exitoso' });
+      if(task){
+        console.log("deleted!")
+        res.json({ message: 'Borrado exitoso' });
+      }
   });
 };
 

@@ -8,14 +8,14 @@ Task = require('./app/Models/taskModels')
 bodyParser = require('body-parser')
 
 //hace la conexion mongoose para el esquema creado
-
 const mongoose = require('mongoose');
 const { Schema, connection} = mongoose;
 const DB = 'Tasks';
 const URI = `mongodb://localhost:27017/${DB}`;
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost/Tasks',{ useNewUrlParser: true })
+mongoose.connect(URI,{ useNewUrlParser: true })
+/*connect*/
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
