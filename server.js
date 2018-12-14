@@ -1,24 +1,34 @@
-var express = require('express'),
-app = express(),
-port = process.env.PORT || 3000,
-mongoose = require('mongoose'),
-Task = require('./app/Models/taskModels'), //modelo creado carga aqui
-bodyParser = require('body-parser');
+//servidor
+var express = require('express')
+app = express()
+port = process.env.PORT || 3000
+
+//modelo creado carga aqui
+Task = require('./app/Models/taskModels') 
+bodyParser = require('body-parser')
 
 //hace la conexion mongoose para el esquema creado
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tasks',{ useNewUrlParser: true }); 
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+const mongoose = require('mongoose');
+const { Schema, connection} = mongoose;
+const DB = 'Tasks';
+const URI = `mongodb://localhost:27017/${DB}`;
 
-var routes = require('./app/routes/tasksRouters'); //importa las rutas para ejecutar las acciones
-routes(app); //register the route
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost/Tasks',{ useNewUrlParser: true })
 
-app.listen(port);
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+//importa las rutas para ejecutar las acciones
+var routes = require('./app/routes/tasksRouters')
+//register the route 
+routes(app)
+
+app.listen(port)
 
 app.use(function(req, res) {
   res.status(404).send({url: req.originalUrl + ' no encontrado'})
-});
+})
 
-console.log('servidor en: ' + port);
+console.log('servidor en: ' + port)

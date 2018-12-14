@@ -8,7 +8,8 @@ var TaskSchema = new Schema({
     default: "Sin título"
   },
   description: {
-    type: String
+    type: String,
+    default: ""
   }
 });
 console.log('esquema Tasks creado')
