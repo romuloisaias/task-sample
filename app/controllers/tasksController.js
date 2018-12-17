@@ -50,7 +50,7 @@ exports.read_a_task = function(req, res) {
 
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
-    //var status = ['creado', 'en proceso','cerrado']
+    var status = ['creado', 'en proceso','cerrado']
     Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
       if (err)
       {
@@ -70,10 +70,9 @@ exports.update_status = function (req, res){
           case "cerrado":
             console.log(task)
             res.json(task)
-              break;
-          default:
-            res.message("no existe")
-            //return res.send("status no existente")
+            break;
+          /*default:
+            res.send("no existe")*/
         }
       }else{
         res.send("no existe");
