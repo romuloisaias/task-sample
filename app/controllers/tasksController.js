@@ -56,26 +56,27 @@ exports.update_status = function (req, res){
       {
         return res.status(500).json(err);
       }
-      if(task){
-        console.log(stat)
-        switch(stat) {
-          case "creado":
-            console.log(task)
-            res.json(task)
-            break;
-          case "en progreso":
-            console.log(task)
-            res.json(task)
-            break;
-          case "cerrado":
-            console.log(task)
-            res.json(task)
-            break;
-          /*default:
-            res.send("no existe")*/
+      console.log(status.indexOf(stat))
+      if(status.indexOf(stat)>=0){
+        if(task){
+          console.log(stat)
+          switch(stat) {
+            case "creado":
+              console.log(task)
+              res.json(task)
+              break;
+            case "en progreso":
+              console.log(task)
+              res.json(task)
+              break;
+            case "cerrado":
+              console.log(task)
+              res.json(task)
+              break;
+          }
         }
       }else{
-        res.send("no existe");
+        res.json({"msj":"no existe status"});
       }
     })
 }
