@@ -48,6 +48,13 @@ exports.read_a_task = function(req, res) {
   });
 };
 
+exports.create_status = function (req, res){
+  var stat = req.body.status.toLowerCase();
+  Task.findById(stat, function(err, task) {
+console.log("crea estado");
+res.send(stat);
+  })
+}
 
 exports.update_a_task = function(req, res) {
   Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) { //encontrar y actualizar

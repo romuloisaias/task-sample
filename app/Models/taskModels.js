@@ -10,6 +10,10 @@ var TaskSchema = new Schema({
   description: {
     type: String,
     default: ""
+  },
+  status: {
+    type: String,
+    default: ""
   }
 });
 console.log('esquema Tasks creado')
