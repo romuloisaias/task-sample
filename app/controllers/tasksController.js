@@ -38,7 +38,7 @@ exports.update_status = function (req, res){
     var indice = status.indexOf(stat);
     var elems = status.length
     elems = elems - 1;
-    console.log(indice + '-'+elems)
+    console.log(indice + '-' +elems)
     if(indice >= 0 && indice <= elems)
     {
         Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
@@ -46,10 +46,10 @@ exports.update_status = function (req, res){
         {
           return res.status(500).json(err);
         }
-          if(task){
-                console.log(task)
-                res.json(task)
-          }
+        if(task){
+            console.log(task)
+            res.json(task)
+        }
       })
     }else{
       res.json({"msj":"status no existente"})
