@@ -32,17 +32,28 @@ exports.create_a_task = function(req, res) {
 exports.list_all_tasks = function(req, res) { //listar todos los registros
   Task.find({}, function(err, task) { //aqui find para buscar registro
     if (err){
+      res.send(err);
+    }
+    if(task){
+      console.log("list all");
+      res.json(task);
+    }else{
+      res.send("no hay registros!");
     }
   });
-};
-exports.create_status = function (req, res){
-  var stat = req.body.status.toLowerCase();
-  Task.findById(stat, function(err, task) {
-console.log("crea estado");
-res.send(stat);
-  })
-};
+ };
 
+exports.read_a_task = function(req, res) {
+  Task.findOne({_id:req.params.taskId}, function(err, task) { //para buscar por ID
+    if (err) {
+      return res.status(500).json(err);
+    }
+    if(task){
+      return res.send(task);
+    }
+    return res.status(404).json({ msg: 'Not found' });
+  });
+  };
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
     var status = ['creado', 'en proceso', 'cerrado']
