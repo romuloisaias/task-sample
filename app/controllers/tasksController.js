@@ -32,14 +32,6 @@ exports.create_a_task = function(req, res) {
   });
 };
 
-/*exports.create_status = function (req, res){
-  var stat = req.body.status.toLowerCase();
-  Task.findById(stat, function(err, task) {
-console.log("crea estado");
-res.send(stat);
-  })
-};*/
-
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
     var status = ['creado', 'en proceso', 'cerrado']
@@ -78,39 +70,6 @@ exports.read_a_task = function(req, res) {
     }  
   });
 };
-
-exports.update_status = function (req, res){
-    var stat = req.body.status.toLowerCase();
-    var status = ['creado', 'en proceso', 'cerrado']
-    Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
-      if (err)
-      {
-        return res.status(500).json(err);
-      }
-      console.log(status.indexOf(stat))
-      if(status.indexOf(stat)>=0){
-        if(task){
-          console.log(stat)
-          switch(stat) {
-            case "creado":
-              console.log(task)
-              res.json(task)
-              break;
-            case "en progreso":
-              console.log(task)
-              res.json(task)
-              break;
-            case "cerrado":
-              console.log(task)
-              res.json(task)
-              break;
-          }
-        }
-      }else{
-        res.json({"msj":"no existe status"});
-      }
-    })
-}
 
 exports.update_a_task = function(req, res) {
   Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) { //encontrar y actualizar
