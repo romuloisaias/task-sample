@@ -50,7 +50,7 @@ exports.read_a_task = function(req, res) {
 
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
-    var status = ['creado', 'en proceso','cerrado']
+    var status = ['creado', 'en proceso', 'cerrado']
     Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
       if (err)
       {
