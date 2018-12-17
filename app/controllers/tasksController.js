@@ -61,7 +61,7 @@ exports.update_status = function (req, res){
     elems = elems - 1;
     console.log(indice + '-'+elems)
     if(status.indexOf(stat) >-1) {
-        Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
+        Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, {new: true}, function(err, task) {
         if (err)
         {
           return res.status(500).json(err);
