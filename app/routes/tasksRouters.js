@@ -10,4 +10,7 @@ module.exports = function(app) {
     .get(List.read_a_task)
     .put(List.update_a_task)
     .delete(List.delete_a_task);
+
+  app.route('/tasks/status/:taskId')
+    .put(List.update_status)
 };

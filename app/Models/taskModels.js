@@ -10,7 +10,11 @@ var TaskSchema = new Schema({
   description: {
     type: String,
     default: ""
+  },
+  status: {
+    type: String,
+    default: "creado",
+    enum: ['creado', 'en proceso', 'cerrado']
   }
 });
-console.log('esquema Tasks creado')
 module.exports = mongoose.model('Tasks', TaskSchema); //el esquema se llama Tasks

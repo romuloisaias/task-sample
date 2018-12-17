@@ -5,7 +5,7 @@ Task = mongoose.model('Tasks');
 exports.list_all_tasks = function(req, res) { //listar todos los registros
   Task.find({}, function(err, task) { //aqui find para buscar registro
     if (err){
-      res.send(err);
+      return res.status(500).json(err);
     }
     if(task){
       console.log("list all");
@@ -21,7 +21,7 @@ exports.create_a_task = function(req, res) {
   new_task.save(function(err, task) { //save para guardar
     if (err)
     {
-      res.send(err);
+      return res.status(500).json(err);
     }
     if(task){
       console.log("created");
@@ -37,7 +37,7 @@ exports.read_a_task = function(req, res) {
   Task.findById(req.params.taskId, function(err, task) { //para buscar por ID
     if (err)
     {
-      res.send(err);
+      return res.status(500).json(err);
     }
     if(task){
       console.log("found!")
@@ -48,16 +48,47 @@ exports.read_a_task = function(req, res) {
   });
 };
 
+exports.update_status = function (req, res){
+    var stat = req.body.status.toLowerCase();
+    var status = ['creado', 'en proceso', 'cerrado']
+    Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
+      if (err)
+      {
+        return res.status(500).json(err);
+      }
+      console.log(status.indexOf(stat))
+      if(status.indexOf(stat)>=0){
+        if(task){
+          console.log(stat)
+          switch(stat) {
+            case "creado":
+              console.log(task)
+              res.json(task)
+              break;
+            case "en progreso":
+              console.log(task)
+              res.json(task)
+              break;
+            case "cerrado":
+              console.log(task)
+              res.json(task)
+              break;
+          }
+        }
+      }else{
+        res.json({"msj":"no existe status"});
+      }
+    })
+}
 
 exports.update_a_task = function(req, res) {
   Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) { //encontrar y actualizar
     if (err)
       {
-        res.send(err);
+        return res.status(500).json(err);
       }
       if(task)
       {
-        console.log("updated")
         res.json(task);
       }
   });
