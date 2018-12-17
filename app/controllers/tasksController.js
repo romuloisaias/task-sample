@@ -57,12 +57,10 @@ exports.read_a_task = function(req, res) {
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
     var status = ['creado', 'en proceso', 'cerrado']
-    var indice = status.indexOf(stat);
     var elems = status.length
     elems = elems - 1;
     console.log(indice + '-'+elems)
-    if(indice >= 0 && indice <= elems)
-    {
+    if(status.indexOf(stat) >-1) {
         Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
         if (err)
         {
