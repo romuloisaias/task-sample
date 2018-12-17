@@ -1,7 +1,6 @@
 'use strict';
 var mongoose = require('mongoose'),
 Task = mongoose.model('Tasks');
-
 exports.list_all_tasks = function(req, res) { //listar todos los registros
   Task.find({}, function(err, task) { //aqui find para buscar registro
     if (err){
@@ -15,7 +14,6 @@ exports.list_all_tasks = function(req, res) { //listar todos los registros
     }
   });
 };
-
 exports.create_a_task = function(req, res) {
   var new_task = new Task(req.body);
   new_task.save(function(err, task) { //save para guardar
@@ -31,54 +29,53 @@ exports.create_a_task = function(req, res) {
     }
   });
 };
-
+exports.list_all_tasks = function(req, res) { //listar todos los registros
+  Task.find({}, function(err, task) { //aqui find para buscar registro
+    if (err){
+      res.send(err);
+    }
+    if(task){
+      console.log("list all");
+      res.json(task);
+    }else{
+      res.send("no hay registros!");
+    }
+  });
+ };
 
 exports.read_a_task = function(req, res) {
-  Task.findById(req.params.taskId, function(err, task) { //para buscar por ID
-    if (err)
-    {
+  Task.findOne({_id:req.params.taskId}, function(err, task) { //para buscar por ID
+    if (err) {
       return res.status(500).json(err);
     }
     if(task){
-      console.log("found!")
-      res.json(task);
-    }else{
-      res.send("no existe");
-    }  
+      return res.send(task);
+    }
+    return res.status(404).json({ msg: 'Not found' });
   });
-};
-
+  };
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
     var status = ['creado', 'en proceso', 'cerrado']
-    Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
-      if (err)
-      {
-        return res.status(500).json(err);
-      }
-      console.log(status.indexOf(stat))
-      if(status.indexOf(stat)>=0){
-        if(task){
-          console.log(stat)
-          switch(stat) {
-            case "creado":
-              console.log(task)
-              res.json(task)
-              break;
-            case "en progreso":
-              console.log(task)
-              res.json(task)
-              break;
-            case "cerrado":
-              console.log(task)
-              res.json(task)
-              break;
-          }
+    var indice = status.indexOf(stat);
+    var elems = status.length
+    elems = elems - 1;
+    console.log(indice + '-'+elems)
+    if(indice >= 0 && indice <= elems)
+    {
+        Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
+        if (err)
+        {
+          return res.status(500).json(err);
         }
-      }else{
-        res.json({"msj":"no existe status"});
-      }
-    })
+          if(task){
+                console.log(task)
+                res.json(task)
+          }
+      })
+    }else{
+      res.json({"msj":"status no existente"})
+    }
 }
 
 exports.update_a_task = function(req, res) {
@@ -93,8 +90,6 @@ exports.update_a_task = function(req, res) {
       }
   });
 };
-
-
 exports.delete_a_task = function(req, res) {
   Task.deleteOne({ //borra registro
     _id: req.params.taskId
@@ -112,4 +107,3 @@ exports.delete_a_task = function(req, res) {
       }
   });
 };
-
