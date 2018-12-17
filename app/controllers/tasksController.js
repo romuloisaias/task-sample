@@ -32,6 +32,37 @@ exports.create_a_task = function(req, res) {
   });
 };
 
+exports.create_status = function (req, res){
+  var stat = req.body.status.toLowerCase();
+  Task.findById(stat, function(err, task) {
+console.log("crea estado");
+res.send(stat);
+  })
+};
+
+exports.update_status = function (req, res){
+    var stat = req.body.status.toLowerCase();
+    var status = ['creado', 'en proceso', 'cerrado']
+    var indice = status.indexOf(stat);
+    var elems = status.length
+    elems = elems - 1;
+    console.log(indice + '-'+elems)
+    if(indice >= 0 && indice <= elems)
+    {
+        Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, function(err, task) {
+        if (err)
+        {
+          return res.status(500).json(err);
+        }
+          if(task){
+                console.log(task)
+                res.json(task)
+          }
+      })
+    }else{
+      res.json({"msj":"status no existente"})
+    }
+}
 
 exports.read_a_task = function(req, res) {
   Task.findById(req.params.taskId, function(err, task) { //para buscar por ID
