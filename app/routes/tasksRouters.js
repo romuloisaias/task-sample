@@ -8,7 +8,7 @@ module.exports = function(app) {
 
   app.route('/tasks/:taskId')
     .get(List.read_a_task)
-    .post(List.create_status)
+    .post(List.update_status)
     .put(List.update_a_task)
     .delete(List.delete_a_task);
 };
