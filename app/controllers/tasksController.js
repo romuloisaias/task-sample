@@ -72,9 +72,12 @@ exports.delete_a_task = function(req, res) {
       {
         res.send(err);
       }
-      if(task){
-        console.log("deleted!")
+      if(task.n > 0){
+        console.log("deleted: "+ task.n)
         res.json({ message: 'Borrado exitoso' });
+      }
+      if(task.n === 0){
+        res.json({ message: 'Nada borrado' });
       }
   });
 };
