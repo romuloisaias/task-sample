@@ -32,7 +32,7 @@ exports.create_a_task = function(req, res) {
 exports.read_a_task = function(req, res) {
   Task.findOne({_id:req.params.taskId}, function(err, task) { //para buscar por ID
     if (err) {
-      return res.status(500).json(err);
+      return res.status(500).json(ergitr);
     }
     if(task){
       return res.send(task);
