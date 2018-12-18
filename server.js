@@ -6,6 +6,9 @@ port = process.env.PORT || 3000
 var cors = require('cors');
 app.use(cors());
 
+var Enum = require('enum');
+require('enum')
+
 //modelo creado carga aqui
 Task = require('./app/Models/taskModels') 
 bodyParser = require('body-parser')

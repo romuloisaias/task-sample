@@ -45,13 +45,16 @@ exports.read_a_task = function(req, res) {
     return res.status(404).json({ msg: 'Not found' });
   });
   };
-  
+
 exports.update_status = function (req, res){
     var stat = req.body.status.toLowerCase();
-    var status = ['creado', 'en proceso', 'cerrado']
-    var elems = status.length
-    elems = elems - 1;
-    if(status.indexOf(stat) >-1) {
+    //var status = ['creado', 'en proceso', 'cerrado']
+    var st = config.STATUS;
+    /*var found = st.find(function(stat) {
+      console.log("encontró "+stat)
+    });*/
+    //console.log(found)
+    if(st.indexOf(stat) >-1) {
         Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, {new: true}, function(err, task) {
         if (err)
         {
@@ -115,7 +118,7 @@ exports.list_status_by_stat = function(req, res) { //listar todos los registros
 };
 
 exports.ListAllByStatus = (req,res) => {
-  if(!req.params.id) res.status(500).json({msg:'mandame el ID vieja'})
+  if(!req.params.id) res.status(500).json({msg:'ID requerido'})
 
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
