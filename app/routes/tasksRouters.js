@@ -3,20 +3,20 @@ module.exports = function(app) {
   var List = require('../controllers/tasksController.js');
 
   app.route('/tasks')
-    .get(List.list_all_tasks)
-    .post(List.create_a_task);
+    .get(List.listAllTasks)
+    .post(List.createTask);
 
   app.route('/tasks/:taskId')
-    .get(List.read_a_task)
-    .put(List.update_a_task)
-    .delete(List.delete_a_task);
+    .get(List.readTask)
+    .put(List.updateTask)
+    .delete(List.deleteTask);
 
   app.route('/tasks/status/:taskId')
-    .put(List.update_status)
+    .put(List.updateStatus)
 
   app.route('/tasks/status/:stat')
-    .get(List.list_status_by_stat)
+    .get(List.listStatusByStat)
 
     app.route('/tasks/listAllByStatus/:id')
-    .get(List.ListAllByStatus)
+    .get(List.listAllByStatus)
 };
