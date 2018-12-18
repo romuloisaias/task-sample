@@ -3,6 +3,9 @@ var express = require('express')
 app = express()
 port = process.env.PORT || 3000
 
+var cors = require('cors');
+app.use(cors());
+
 //modelo creado carga aqui
 Task = require('./app/Models/taskModels') 
 bodyParser = require('body-parser')

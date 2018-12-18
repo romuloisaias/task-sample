@@ -1,0 +1,1 @@
+exports.STATUS = ['creado', 'en proceso', 'cerrado']

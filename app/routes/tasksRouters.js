@@ -15,5 +15,8 @@ module.exports = function(app) {
     .put(List.update_status)
 
   app.route('/tasks/status/:stat')
-    .get(List.list_status_by_stat)  
+    .get(List.list_status_by_stat)
+
+    app.route('/tasks/listAllByStatus/:id')
+    .get(List.ListAllByStatus)
 };
