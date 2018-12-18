@@ -4,10 +4,11 @@ Task = mongoose.model('Tasks');
 exports.list_all_tasks = function(req, res) { //listar todos los registros
   Task.find({}, function(err, task) { //aqui find para buscar registro
     if (err){
+      console.error(err.stack);
       return res.status(500).json(err);
     }
     if(task){
-      console.log("list all");
+      console.log(req.method);
       res.json(task);
     }else{
       res.send("no hay registros!");
@@ -19,6 +20,7 @@ exports.create_a_task = function(req, res) {
   new_task.save(function(err, task) { //save para guardar
     if (err)
     {
+      console.error(err.stack);
       return res.status(500).json(err);
     }
     if(task){
@@ -29,23 +31,11 @@ exports.create_a_task = function(req, res) {
     }
   });
 };
-exports.list_all_tasks = function(req, res) { //listar todos los registros
-  Task.find({}, function(err, task) { //aqui find para buscar registro
-    if (err){
-      res.send(err);
-    }
-    if(task){
-      console.log("list all");
-      res.json(task);
-    }else{
-      res.send("no hay registros!");
-    }
-  });
- };
 
 exports.read_a_task = function(req, res) {
   Task.findOne({_id:req.params.taskId}, function(err, task) { //para buscar por ID
     if (err) {
+      console.error(err.stack);
       return res.status(500).json(err);
     }
     if(task){
@@ -59,11 +49,11 @@ exports.update_status = function (req, res){
     var status = ['creado', 'en proceso', 'cerrado']
     var elems = status.length
     elems = elems - 1;
-    console.log(indice + '-'+elems)
     if(status.indexOf(stat) >-1) {
         Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, {new: true}, function(err, task) {
         if (err)
         {
+          console.error(err.stack);
           return res.status(500).json(err);
         }
           if(task){
@@ -80,6 +70,7 @@ exports.update_a_task = function(req, res) {
   Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) { //encontrar y actualizar
     if (err)
       {
+        console.error(err.stack);
         return res.status(500).json(err);
       }
       if(task)
@@ -94,6 +85,7 @@ exports.delete_a_task = function(req, res) {
   }, function(err, task) {
     if (err)
       {
+        console.error(err.stack);
         res.send(err);
       }
       if(task.n > 0){
