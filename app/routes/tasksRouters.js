@@ -13,4 +13,7 @@ module.exports = function(app) {
 
   app.route('/tasks/status/:taskId')
     .put(List.update_status)
+
+  app.route('/tasks/status/:stat')
+    .get(List.list_status_by_stat)  
 };

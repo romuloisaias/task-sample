@@ -31,8 +31,5 @@ app.listen(port)
 app.use(function(req, res) {
   res.status(404).send({url: req.originalUrl + ' no encontrado'})
 })
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
+
 console.log('servidor en: ' + port)

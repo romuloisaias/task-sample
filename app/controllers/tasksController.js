@@ -91,3 +91,18 @@ exports.delete_a_task = function(req, res) {
       }
   });
 };
+exports.list_status_by_stat = function(req, res) { //listar todos los registros
+  var stats = req.params.stat.toLowerCase();
+  console.log(stats+"UNO")
+  Task.find({status:stats}, function(err, task) { //aqui find para buscar registro
+    if (err){
+      return res.status(500).json(err);
+    }
+    if(task){
+      console.log("list all");
+      res.json(task);
+    }else{
+      res.send("no hay registros!");
+    }
+  });
+};
