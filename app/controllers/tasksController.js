@@ -131,3 +131,7 @@ exports.listPages = (req, res) => { //paginador
   .limit(regsPerPage)
   .lean()
 }
+
+exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro hay un mainpage o index
+  res.status(308).redirect("/tasks");
+}

@@ -2,6 +2,9 @@
 module.exports = function(app) {
   var List = require('../controllers/tasksController.js')
 
+  app.route("/")
+    .get(List.initPage)
+
   app.route('/tasks') // lista todos los elementos
     .get(List.listAllTasks)
     .post(List.createTask)
