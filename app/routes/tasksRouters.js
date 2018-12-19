@@ -2,7 +2,7 @@
 module.exports = function(app) {
   var List = require('../controllers/tasksController.js')
 
-  app.route("/")
+  app.route("/") //redirige a /tasks
     .get(List.initPage)
 
   app.route('/tasks') // lista todos los elementos
