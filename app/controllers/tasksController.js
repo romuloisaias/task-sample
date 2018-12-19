@@ -48,7 +48,8 @@ exports.updateStatus = function (req, res){
     var stat = req.body.status.toLowerCase();
     var st = config.STATUS;
     if(st.indexOf(stat) >-1) {
-        Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, {new: true}, function(err, task) {
+        var newDate = Date.now
+        Task.findOneAndUpdate({_id: req.params.taskId},{updatedAt: newDate}, {status:stat}, {new: true}, function(err, task) {
         if (err)
         {
           return res.status(500).json(err);
