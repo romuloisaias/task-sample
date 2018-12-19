@@ -138,9 +138,6 @@ exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro h
 
 exports.searchByTitle = (req, res) => {
   var reqTitle = req.params.tit
-  console.log(reqTitle)
-  //Task.find({ is_active: true },{username:1, personal_info:1})
-  //title: { contains: 'foo' }
    Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) { 
     if (err){
       return res.status(500).json(err);
