@@ -108,12 +108,12 @@ exports.listAllByStatus = (req,res) => {
       var currentStatus = data.status
       var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
 
-      res.send(diffStatus)
+      res.status(200).json(diffStatus)
     }
   })
 }
 
-exports.listPages = (req, res) => {
+exports.listPages = (req, res) => { //paginador
   var numPage = parseInt(req.params.page)
   var skipPage = (numPage-1)*3
   var regsPerPage = 3

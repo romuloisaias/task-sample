@@ -17,6 +17,6 @@ module.exports = function(app) {
   app.route('/tasks/status/:stat')
     .get(List.listStatusByStat) //lista filtrando por estatus
 
-    app.route('/tasks/listAllByStatus/:id')
+  app.route('/tasks/listAllByStatus/:id')
     .get(List.listAllByStatus) //lista todos por status
 };
