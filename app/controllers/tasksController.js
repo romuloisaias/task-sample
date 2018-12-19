@@ -61,22 +61,9 @@ exports.updateStatus = function (req, res){
           }
       })
     }else{
-      res.json({"msj":"status no existente"})
+      res.status(404).json({"msj":"status no existente"})
     }
 }
-
-exports.updateTask = function(req, res) {
-  Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) { //encontrar y actualizar
-    if (err)
-      {
-        return res.status(500).json(err);
-      }
-      if(task)
-      {
-        res.status(200).json(task);
-      }
-  });
-};
 
 exports.deleteTask = function(req, res) {
   Task.deleteOne({ //borra registro
@@ -107,7 +94,7 @@ exports.listStatusByStat = function(req, res) { //listar todos los registros
       console.log("list all");
       res.status(200).json(task);
     }else{
-      res.json({"msj":"no hay registros!"})
+      res.status(404).json({"msj":"no hay registros!"})
     }
   });
 };
@@ -124,4 +111,29 @@ exports.listAllByStatus = (req,res) => {
       res.send(diffStatus)
     }
   })
+}
+
+exports.listPages = (req, res) => {
+  var numPage = parseInt(req.params.page)
+  var skipPage = (numPage-1)*3
+  var regsPerPage = 3
+  Task.countDocuments()
+  .then(function ( count ){
+  numPages = parseInt((count/3)+1);
+  });
+  //find({ is_active: true },{username:1, personal_info:1})
+  Task.find({}, function(err, task) { 
+    if (err){
+      return res.status(500).json(err);
+    }
+    if(task){
+      console.log("list all");
+      res.status(200).json(task);
+    }else{
+      res.json({"msj":"registro no existente"})
+    }
+  })
+  .skip(skipPage)
+  .limit(regsPerPage)
+  .lean()
 }
