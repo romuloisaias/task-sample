@@ -10,7 +10,6 @@ exports.listAllTasks = function(req, res) { //listar todos los registros
       return res.status(500).json(err);
     }
     if(task){
-      console.log("list all");
       res.status(200).json(task);
     }else{
       res.json({"msj":"registro no existente"})
@@ -26,7 +25,6 @@ exports.createTask = function(req, res) {
       return res.status(500).json(err);
     }
     if(task){
-      console.log("created");
       res.status(200).json(task);
     }else{
       res.json("registro no se agregó")
@@ -56,8 +54,7 @@ exports.updateStatus = function (req, res){
           return res.status(500).json(err);
         }
           if(task){
-                console.log(task)
-                res.status(200).json(task)
+            res.status(200).json(task)
           }
       })
     }else{
@@ -74,7 +71,6 @@ exports.deleteTask = function(req, res) {
         res.json(err);
       }
       if(task.n > 0){
-        console.log("deleted: "+ task.n)
         res.status(200).json({ message: 'Borrado exitoso' });
       }
       if(task.n === 0){
@@ -85,13 +81,11 @@ exports.deleteTask = function(req, res) {
 
 exports.listStatusByStat = function(req, res) { //listar todos los registros
   var stats = req.params.stat.toLowerCase();
-  console.log(stats+"UNO")
   Task.find({status:stats}, function(err, task) { //aqui find para buscar registro
     if (err){
       return res.status(500).json(err);
     }
     if(task){
-      console.log("list all");
       res.status(200).json(task);
     }else{
       res.status(404).json({"msj":"no hay registros!"})
@@ -114,12 +108,13 @@ exports.listAllByStatus = (req,res) => {
 }
 
 exports.listPages = (req, res) => { //paginador
+  console.log(req.params.page)
   var numPage = parseInt(req.params.page)
   var skipPage = (numPage-1)*3
   var regsPerPage = 3
   Task.countDocuments()
   .then(function ( count ){
-  numPages = parseInt((count/3)+1);
+  var numPages = parseInt((count/3)+1);
   });
   //find({ is_active: true },{username:1, personal_info:1})
   Task.find({}, function(err, task) { 
@@ -127,7 +122,6 @@ exports.listPages = (req, res) => { //paginador
       return res.status(500).json(err);
     }
     if(task){
-      console.log("list all");
       res.status(200).json(task);
     }else{
       res.json({"msj":"registro no existente"})
