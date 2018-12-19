@@ -1,7 +1,7 @@
 //servidor
 var express = require('express')
 app = express()
-port = process.env.PORT || 3001
+port = process.env.PORT || 3000
 
 var cors = require('cors');
 app.use(cors());
