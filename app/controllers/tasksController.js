@@ -108,10 +108,10 @@ exports.listAllByStatus = (req,res) => {
 };
 
 exports.listPages = (req, res) => { //paginador
-  console.log(req.query.page)
-  console.log(req.query.elems)
+  console.log(req.params.page)
+  console.log(req.params.elems)
   var numPage = parseInt(req.params.page)
-  var regsPerPage = req.params.elems
+  var regsPerPage = parseInt(req.params.elems)
   var skipPage = (numPage-1)*regsPerPage
   Task.countDocuments()
   .then(function ( count ){
