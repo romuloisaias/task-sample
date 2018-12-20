@@ -105,7 +105,7 @@ exports.listAllByStatus = (req,res) => {
       res.status(200).json(diffStatus)
     }
   })
-}
+};
 
 exports.listPages = (req, res) => { //paginador
   console.log(req.query.page)
