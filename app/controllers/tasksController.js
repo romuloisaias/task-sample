@@ -107,18 +107,18 @@ exports.listAllByStatus = (req,res) => {
   })
 };
 
-exports.listPages = (req, res) => { //paginador
-  console.log(req.params.page)
-  console.log(req.params.elems)
+exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag, y filtro por status
   var numPage = parseInt(req.params.page)
   var regsPerPage = parseInt(req.params.elems)
+  var st = req.body.status
   var skipPage = (numPage-1)*regsPerPage
   Task.countDocuments()
-  .then(function ( count ){
+  .then(function(count){
   var numPages = parseInt((count/regsPerPage)+1);
   });
   //find({ is_active: true },{username:1, personal_info:1})
-  Task.find({}, function(err, task) { 
+  Task.find({"status":st}, function(err, task) { 
+    var count = task.length;
     if (err){
       return res.status(500).json(err);
     }
@@ -139,7 +139,6 @@ exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro h
 
 exports.searchByTitle = (req, res) => {
   var reqTitle = req.params.tit
-  console.log(reqTitle)
    Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) { 
     if (err){
       return res.status(500).json(err);
@@ -151,3 +150,44 @@ exports.searchByTitle = (req, res) => {
     }
   }).sort({'title':-1})
 }
+exports.updateByIdCollection = (req, res) => {
+  var ids = req.body.ids
+  console.log(ids)
+  Task.find({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
+    if (err){
+      return res.status(500).json(err);
+    }
+    if(task){
+      res.status(200).json(task);
+    }else{
+      res.json({"msj":"registro no existente"})
+    }
+  })
+}
+/*exports.updateReg = (req, res) => {
+  var id = req.body._id
+  var tit = req.body.title
+  var stat = req.body.status.toLowerCase()
+  var st = config.STATUS;
+  var desc = req.body.description
+  let idToFind = id
+  let doc = {"title":tit,"status":stat,"description":desc}
+  let opts = { 
+    new: true, 
+    upsert: false, 
+    setDefaultsOnInsert: false, 
+    runValidators: true
+  };
+  if(st.indexOf(stat) >-1) {
+    Task.findOneAndUpdate(idToFind,doc,opts, function(err, task) {
+      if (err){
+        return res.status(500).json(err);
+      }
+      if(task){
+        res.status(200).json(task);
+      }
+    })
+  }else{
+    res.status(404).json({"msj":"registro no existente"})
+  }
+}*/

@@ -25,4 +25,10 @@ module.exports = function(app) {
 
   app.route('/tasks/listAllByStatus/:id')
     .get(List.listAllByStatus) //lista todos por status
+
+  app.route('/tasks/updateIds/upDateByIds/')
+    .put(List.updateByIdCollection) //lista todos por colección de IDs
+
+  /*app.route('/tasks/update/all')
+    .put(List.updateReg)*/
 };
