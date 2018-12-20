@@ -94,8 +94,9 @@ exports.updateTask = function (req, res){
 }
 
 exports.deleteTask = function(req, res) {
+  console.log(req.params.id)
   Task.deleteOne({ //borra registro
-    _id: req.params.taskId
+    _id: req.params.id
   }, function(err, task) {
     if (err)
       {
