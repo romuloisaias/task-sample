@@ -44,22 +44,53 @@ exports.readTask = function(req, res) {
   });
 };
 
+function alternativeStatus(normalicedNewStatus, currentStatus){
+  var possibleStatus = config.STATUS
+  if(possibleStatus.indexOf(normalicedNewStatus) == -1){
+    var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
+    return diffStatus
+  }
+  return null
+}
+
 exports.updateStatus = function (req, res){
-    var stat = req.body.status.toLowerCase();
-    var st = config.STATUS;
-    if(st.indexOf(stat) >-1) {
-        Task.findOneAndUpdate({_id: req.params.taskId}, {status:stat}, {new: true}, function(err, task) {
-        if (err)
-        {
-          return res.status(500).json(err);
-        }
-          if(task){
-            res.status(200).json(task)
-          }
-      })
+  if(!req.params.id) res.status(500).json({msg:'ID requerido'})
+  Task.findOne({ _id: req.params.id }, (err, data)=>{
+    if(err) return res.status(500).json(err)
+    if(!data) return res.status(404).json({msg: 'Task not found'})
+
+    var normalicedStatus = req.body.status.toLowerCase();
+    var alternativeStatusRes = alternativeStatus( normalicedStatus, data.status )
+    if(alternativeStatusRes){
+      return res.status(404).json({msg: 'Status not existent', suggestedStatus: alternativeStatusRes})
     }else{
-      res.status(404).json({"msj":"status no existente"})
+      data.status = normalicedStatus
     }
+
+    data.save((err, savedData)=>{
+      if(err) return res.status(500).json(err)
+
+      return res.status(200).json(savedData)
+    })
+  })
+}
+
+exports.updateTask = function (req, res){
+  Task.findOne({ _id: req.params.taskId }, (err, data)=>{
+    if(err) return res.status(500).json(err)
+    if(!data) return res.status(404).json({msg: 'Task not found'})
+    data.title = req.body.title || data.title
+    data.description = req.body.description || data.description
+
+    var normalicedStatus = req.body.status.toLowerCase()
+    if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
+
+    data.save((err, savedData)=>{
+      if(err) return res.status(500).json(err)
+
+      return res.status(200).json(savedData)
+    })
+  })
 }
 
 exports.deleteTask = function(req, res) {
@@ -76,8 +107,8 @@ exports.deleteTask = function(req, res) {
       if(task.n === 0){
         res.json({ message: 'Nada borrado' });
       }
-  });
-};
+  })
+}
 
 exports.listStatusByStat = function(req, res) { //listar todos los registros
   var stats = req.params.stat.toLowerCase();
@@ -91,20 +122,6 @@ exports.listStatusByStat = function(req, res) { //listar todos los registros
       res.status(404).json({"msj":"no hay registros!"})
     }
   });
-};
-
-exports.listAllByStatus = (req,res) => {
-  if(!req.params.id) res.status(500).json({msg:'ID requerido'})
-  Task.findOne({ _id: req.params.id }, (err, data)=>{
-    if(err) return res.status(500).json(err)
-    if(data){
-      var possibleStatus = config.STATUS
-      var currentStatus = data.status
-      var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
-
-      res.status(200).json(diffStatus)
-    }
-  })
 };
 
 exports.listPages = (req, res) => { //paginador
