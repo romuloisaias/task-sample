@@ -182,8 +182,10 @@ exports.searchByTitle = (req, res) => {
   }).sort({'title':-1})
 }
 exports.updateByIdCollection = (req, res) => {
-  var ids = req.body.ids
-  Task.find({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
+  var ids = req.body._id
+  Task.findOneAndUpdate({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
+    var title =req.body.title || task.title
+    var description =req.body.description || task.description
     if (err){
       return res.status(500).json(err);
     }
