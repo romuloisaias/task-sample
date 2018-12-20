@@ -9,7 +9,7 @@ module.exports = function(app) {
     .get(List.listAllTasks)
     .post(List.createTask)
 
-  app.route('/tasks/paginator/:page') //lista con paginación
+  app.route('/tasks/paginator/:page/:elems') //lista con paginación
     .get(List.listPages)
 
   app.route('/tasks/:taskId')

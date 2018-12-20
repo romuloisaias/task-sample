@@ -108,13 +108,14 @@ exports.listAllByStatus = (req,res) => {
 }
 
 exports.listPages = (req, res) => { //paginador
-  console.log(req.params.page)
+  console.log(req.query.page)
+  console.log(req.query.elems)
   var numPage = parseInt(req.params.page)
-  var skipPage = (numPage-1)*3
-  var regsPerPage = 3
+  var regsPerPage = req.params.elems
+  var skipPage = (numPage-1)*regsPerPage
   Task.countDocuments()
   .then(function ( count ){
-  var numPages = parseInt((count/3)+1);
+  var numPages = parseInt((count/regsPerPage)+1);
   });
   //find({ is_active: true },{username:1, personal_info:1})
   Task.find({}, function(err, task) { 
@@ -138,6 +139,7 @@ exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro h
 
 exports.searchByTitle = (req, res) => {
   var reqTitle = req.params.tit
+  console.log(reqTitle)
    Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) { 
     if (err){
       return res.status(500).json(err);
@@ -147,5 +149,5 @@ exports.searchByTitle = (req, res) => {
     }else{
       res.json({"msj":"registro no existente"})
     }
-  })
+  }).sort({'title':-1})
 }
