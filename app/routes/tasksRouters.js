@@ -12,13 +12,13 @@ module.exports = function(app) {
   app.route('/tasks/paginator/:page/:elems') //lista con paginación
     .get(List.listPages)
 
-  app.route('/tasks/:taskId')
+  app.route('/tasks/:id')
     .get(List.readTask) //lee tarea
-    .put(List.updateStatus) //actualiza estatus (funciona)
+    .put(List.updateTask) //actualiza estatus (funciona)
     .delete(List.deleteTask) //borra tarea
 
-  app.route('/tasks/status/:stat')
-    .get(List.listStatusByStat) //lista filtrando por estatus
+  //app.route('/tasks/status/:stat')
+    //.get(List.listStatusByStat) //lista filtrando por estatus
 
   app.route('/tasks/title/:tit') //busca parecidos por titulo
     .get(List.searchByTitle)
@@ -29,4 +29,6 @@ module.exports = function(app) {
   app.route('/tasks/updateIds/upDateByIds/')
     .put(List.updateByIdCollection) //lista todos por colección de IDs
 
+  app.route('/tasks/status/:id')
+    .put(List.updateStatus) //lista todos por status
 };
