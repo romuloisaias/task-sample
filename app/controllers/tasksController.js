@@ -124,17 +124,32 @@ exports.listStatusByStat = function(req, res) { //listar todos los registros
   });
 };
 
-exports.listPages = (req, res) => { //paginador
-  console.log(req.params.page)
+exports.listAllByStatus = (req,res) => {
+  if(!req.params.id) res.status(500).json({msg:'ID requerido'})
+  Task.findOne({ _id: req.params.id }, (err, data)=>{
+    if(err) return res.status(500).json(err)
+    if(data){
+      var possibleStatus = config.STATUS
+      var currentStatus = data.status
+      var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
+
+      res.status(200).json(diffStatus)
+    }
+  })
+};
+
+exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag, y filtro por status
+
   var numPage = parseInt(req.params.page)
-  var skipPage = (numPage-1)*3
-  var regsPerPage = 3
+  var regsPerPage = parseInt(req.params.elems)
+  var st = req.body.status
+  var skipPage = (numPage-1)*regsPerPage
   Task.countDocuments()
-  .then(function ( count ){
-  var numPages = parseInt((count/3)+1);
+  .then(function(count){
+  var numPages = parseInt((count/regsPerPage)+1);
   });
-  //find({ is_active: true },{username:1, personal_info:1})
-  Task.find({}, function(err, task) { 
+  Task.find({"status":st}, function(err, task) { 
+    var count = task.length;
     if (err){
       return res.status(500).json(err);
     }
@@ -151,4 +166,31 @@ exports.listPages = (req, res) => { //paginador
 
 exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro hay un mainpage o index
   res.status(308).redirect("/tasks");
+}
+
+exports.searchByTitle = (req, res) => {
+  var reqTitle = req.params.tit
+   Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) { 
+    if (err){
+      return res.status(500).json(err);
+    }
+    if(task){
+      res.status(200).json(task);
+    }else{
+      res.json({"msj":"registro no existente"})
+    }
+  }).sort({'title':-1})
+}
+exports.updateByIdCollection = (req, res) => {
+  var ids = req.body.ids
+  Task.find({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
+    if (err){
+      return res.status(500).json(err);
+    }
+    if(task){
+      res.status(200).json(task);
+    }else{
+      res.json({"msj":"registro no existente"})
+    }
+  })
 }
