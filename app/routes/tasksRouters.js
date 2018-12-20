@@ -29,6 +29,4 @@ module.exports = function(app) {
   app.route('/tasks/updateIds/upDateByIds/')
     .put(List.updateByIdCollection) //lista todos por colección de IDs
 
-  /*app.route('/tasks/update/all')
-    .put(List.updateReg)*/
 };

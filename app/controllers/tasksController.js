@@ -116,7 +116,6 @@ exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag,
   .then(function(count){
   var numPages = parseInt((count/regsPerPage)+1);
   });
-  //find({ is_active: true },{username:1, personal_info:1})
   Task.find({"status":st}, function(err, task) { 
     var count = task.length;
     if (err){
@@ -152,7 +151,6 @@ exports.searchByTitle = (req, res) => {
 }
 exports.updateByIdCollection = (req, res) => {
   var ids = req.body.ids
-  console.log(ids)
   Task.find({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
     if (err){
       return res.status(500).json(err);
@@ -164,30 +162,3 @@ exports.updateByIdCollection = (req, res) => {
     }
   })
 }
-/*exports.updateReg = (req, res) => {
-  var id = req.body._id
-  var tit = req.body.title
-  var stat = req.body.status.toLowerCase()
-  var st = config.STATUS;
-  var desc = req.body.description
-  let idToFind = id
-  let doc = {"title":tit,"status":stat,"description":desc}
-  let opts = { 
-    new: true, 
-    upsert: false, 
-    setDefaultsOnInsert: false, 
-    runValidators: true
-  };
-  if(st.indexOf(stat) >-1) {
-    Task.findOneAndUpdate(idToFind,doc,opts, function(err, task) {
-      if (err){
-        return res.status(500).json(err);
-      }
-      if(task){
-        res.status(200).json(task);
-      }
-    })
-  }else{
-    res.status(404).json({"msj":"registro no existente"})
-  }
-}*/
