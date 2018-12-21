@@ -32,7 +32,7 @@ exports.createTask = function(req, res) {
 }
 
 exports.readTask = function(req, res) {
-  Task.findOne({_id:req.params.taskId}, function(err, task) { //para buscar por ID
+  Task.findOne({_id:req.params.id}, function(err, task) { //para buscar por ID
     if (err) {
       return res.status(500).json(err);
     }
@@ -102,7 +102,7 @@ exports.updateTask = function (req, res){
 
 exports.deleteTask = function(req, res) {
   Task.deleteOne({ //borra registro
-    _id: req.params.taskId
+    _id: req.params.id
   }, function(err, task) {
     if (err)
       {
