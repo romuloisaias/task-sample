@@ -3,8 +3,6 @@ var express = require('express')
 app = express()
 port = process.env.PORT || 3000
 
-//modelo creado carga aqui
-Task = require('./app/Models/taskModels') 
 bodyParser = require('body-parser')
 
 //hace la conexion mongoose para el esquema creado
@@ -22,7 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 //importa las rutas para ejecutar las acciones
-var routes = require('./app/routes/tasksRouters')
+
+var routes = require('./app/routes/userRouters')
 //register the route 
 routes(app)
 
