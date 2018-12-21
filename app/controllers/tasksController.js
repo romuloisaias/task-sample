@@ -95,9 +95,9 @@ exports.updateTask = function (req, res){
 }
 
 exports.deleteTask = function(req, res) {
-  console.log(req.params.id)
+  console.log(req.params.taskId)
   Task.deleteOne({ //borra registro
-    _id: req.params.id
+    _id: req.params.taskId
   }, function(err, task) {
     if (err)
       {
@@ -107,7 +107,7 @@ exports.deleteTask = function(req, res) {
         res.status(200).json({ message: 'Borrado exitoso' });
       }
       if(task.n === 0){
-        res.json({ message: 'Nada borrado' });
+        res.status(404).json({ message: 'Nada borrado' });
       }
   })
 }
