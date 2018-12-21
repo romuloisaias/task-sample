@@ -1,7 +1,6 @@
 'use strict';
-var mongoose = require('mongoose'),
-Task = mongoose.model('Tasks');
-
+var mongoose = require('mongoose')
+var Task = mongoose.model('Tasks')
 var config = require('../config')
 
 exports.listAllTasks = function(req, res) { //listar todos los registros
@@ -14,12 +13,12 @@ exports.listAllTasks = function(req, res) { //listar todos los registros
     }else{
       res.json({"msj":"registro no existente"})
     }
-  });
-};
+  })
+}
 
 exports.createTask = function(req, res) {
-  var new_task = new Task(req.body);
-  new_task.save(function(err, task) { //save para guardar
+  var newTask = new Task(req.body);
+  newTask.save(function(err, task) { //save para guardar
     if (err)
     {
       return res.status(500).json(err);
@@ -29,8 +28,8 @@ exports.createTask = function(req, res) {
     }else{
       res.json("registro no se agregó")
     }
-  });
-};
+  })
+}
 
 exports.readTask = function(req, res) {
   Task.findOne({_id:req.params.taskId}, function(err, task) { //para buscar por ID
