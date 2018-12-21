@@ -3,8 +3,8 @@
 var mongoose = require('mongoose')
 var Task = mongoose.model('Tasks')
 var config = require('../config')
-
-exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro hay un mainpage o index
+//REDIRECT TO MAIN PAGE
+exports.initPage = (req, res) => {
   res.status(308).redirect("/tasks")
 }
 
@@ -120,6 +120,7 @@ exports.listPages = (req, res) => {
   .lean()
 }
 
+//FILTER BY TITLE
 exports.searchByTitle = (req, res) => {
   var reqTitle = req.params.title
    Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) {
@@ -149,6 +150,7 @@ exports.updateByIdCollection = (req, res) => {
   })
 }
 
+//FUNCTION THAT PROVIDES THE STATE SUGGESTION AVAILABLE
 function alternativeStatus(normalicedNewStatus, currentStatus){
   var possibleStatus = config.STATUS
   if(possibleStatus.indexOf(normalicedNewStatus) == -1){

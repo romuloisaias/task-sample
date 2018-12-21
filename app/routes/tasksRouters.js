@@ -1,31 +1,37 @@
-'use strict';
+'use strict'
 module.exports = function(app) {
   var taskController = require('../controllers/tasksController.js')
   
   app.route("/")
     .get(taskController.initPage)
 
-  app.route('/tasks') // lista todos los elementos
-    .get(taskController.listAllTasks)
+  app.route('/tasks')
+    //CREATE NEW TASK VIA POST
     .post(taskController.createTask)
 
-  app.route('/tasks/paginator/:page/:elements') //lista con paginación
+  app.route('/tasks/paginator/:page/:elements')
+  //LIST TASK WITH PAGINATION VIA GET
     .get(taskController.listPages)
 
   app.route('/tasks/:id')
-    .get(taskController.readTask) //lee tarea
-    .put(taskController.updateTask) //actualiza estatus (funciona)
-    .delete(taskController.deleteTask) //borra tarea
+    //UPDATE TASK VIA PUT
+    .put(taskController.updateTask)
 
-  app.route('/tasks/title/:title') //busca parecidos por titulo
+    //DELETE TASK VIA DELETE
+    .delete(taskController.deleteTask)
+
+  app.route('/tasks/title/:title')
+
+    //FIND CONTENT IN TITLE AND LIST TAKS VIA GET
     .get(taskController.searchByTitle)
 
-  app.route('/tasks/listAllByStatus/:id')
-    .get(taskController.listAllByStatus) //lista todos por status
-
-  app.route('/tasks/updateIds/upDateByIds/')
-    .put(taskController.updateByIdCollection) //lista todos por colección de IDs
+    app.route('/tasks/updateIds/upDateByIds/')
+    
+    //LIST ALL BY ID COLLECTION VIA PUT
+    .put(taskController.updateByIdCollection)
 
   app.route('/tasks/status/:id')
-    .put(taskController.updateStatus) //lista todos por status
+    
+    //WILL UPGRADE STATUS IN CASE OF ERROR, WILL SUGGESTED AVAILABLE STATUS
+    .put(taskController.updateStatus)
 };
