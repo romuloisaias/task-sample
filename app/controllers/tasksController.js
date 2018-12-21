@@ -180,6 +180,7 @@ exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag,
         return res.status(500).json(err);
       }
       if(task){
+        console.log(task)
         res.status(200).json(task);
       }else{
         res.json({"msj":"registro no existente"})
