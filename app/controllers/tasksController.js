@@ -12,7 +12,7 @@ exports.listAllTasks = function(req, res) { //listar todos los registros
     if(task){
       res.status(200).json(task);
     }else{
-      res.json({"msj":"registro no existente"})
+      res.status(404).json({"msj":"registro no existente"})
     }
   });
 };
@@ -40,7 +40,7 @@ exports.readTask = function(req, res) {
     if(task){
       return res.status(200).json(task);
     }
-    return res.status(404).json({ msg: 'Not found' });
+    return res.status(404).json({ msg: 'Registro no encontrado!' });
   });
 };
 
@@ -187,7 +187,7 @@ exports.updateByIdCollection = (req, res) => {
   var ids = req.body._id
   var title =req.body.title || task.title
     var description =req.body.description || task.description
-  Task.updateMany({"description" : desc},{$set:"_id" in ids}, function(err, task) {
+  Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
     if (err){
       console.log("error")
       res.status(500).json(err);
