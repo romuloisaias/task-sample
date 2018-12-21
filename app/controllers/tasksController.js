@@ -90,7 +90,14 @@ exports.updateTask = function (req, res){
 
         return res.status(200).json(savedData)
       })
-    }else return  res.status(200).json('No se actualizo el status porque el estado modificado es inexistente')
+    }else{
+      data.status = data.status
+      data.save((err, savedData)=>{
+        if(err) return res.status(500).json(err)
+
+        return res.status(200).json(savedData)
+      })
+    }
   })
 }
 
