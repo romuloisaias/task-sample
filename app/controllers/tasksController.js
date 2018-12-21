@@ -44,7 +44,6 @@ exports.updateStatus = function (req, res){
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
     if(!data) return res.status(404).json({msg: 'Task not found'})
-
     var normalicedStatus = req.body.status.toLowerCase()
     var alternativeStatusRes = alternativeStatus( normalicedStatus, data.status )
     if(alternativeStatusRes){
@@ -52,7 +51,6 @@ exports.updateStatus = function (req, res){
     }else{
       data.status = normalicedStatus
     }
-
     data.save((err, savedData)=>{
       if(err) return res.status(500).json(err)
 
@@ -70,20 +68,11 @@ exports.updateTask = function (req, res){
     if(req.body.status){
       var normalicedStatus = req.body.status.toLowerCase()
       if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
-
-      data.save((err, savedData)=>{
-        if(err) return res.status(500).json(err)
-
-        return res.status(200).json(savedData)
-      })
-    }else{
-      data.status = data.status
-      data.save((err, savedData)=>{
-        if(err) return res.status(500).json(err)
-
-        return res.status(200).json(savedData)
-      })
     }
+    data.save((err, savedData)=>{
+      if(err) return res.status(500).json(err)
+      return res.status(200).json(savedData)
+    })
   })
 }
 
@@ -97,7 +86,7 @@ exports.deleteTask = function(req, res) {
         res.json(err)
       }
       if(task.n > 0){
-        res.status(200).json({ message: 'Borrado exitoso' })
+        res.status(200).json({ message: 'The removed has been successful' })
       }
       if(task.n === 0){
         res.json({ message: 'Nada borrado' })
@@ -105,22 +94,8 @@ exports.deleteTask = function(req, res) {
   })
 }
 
-// exports.listAllByStatus = (req,res) => {
-//   if(!req.params.id) res.status(500).json({msg:'ID requerido'})
-//   Task.findOne({ _id: req.params.id }, (err, data)=>{
-//     if(err) return res.status(500).json(err)
-//     if(data){
-//       var possibleStatus = config.STATUS
-//       var currentStatus = data.status
-//       var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
-
-//       res.status(200).json(diffStatus)
-//     }
-//   })
-// }
-
-//
-exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag, y filtro por status
+//PAGINATOR WHIT NUMBER OF PAGE, NUMBER OF ELEMENTS AND FILTER BY STATUS
+exports.listPages = (req, res) => { 
   var numPage = parseInt(req.params.page)
   var regsPerPage = parseInt(req.params.elements)
   var statusFilter = req.body.status
@@ -137,7 +112,7 @@ exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag,
     if(task){
       res.status(200).json(task)
     }else{
-      res.json({"msj":"registro no existente"})
+      res.status(404).json({"msj":"The register is not found"})
     }
   })
   .skip(skipPage)
@@ -145,23 +120,21 @@ exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag,
   .lean()
 }
 
-
-
 exports.searchByTitle = (req, res) => {
   var reqTitle = req.params.title
-   Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) { 
+   Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) {
     if (err){
       return res.status(500).json(err)
     }
     if(task){
       res.status(200).json(task)
     }else{
-      res.json({"msj":"registro no existente"})
+      res.status(404).json({"msj":"The register is not found"})
     }
   }).sort({'title':-1})
 }
 
-
+//ACTUALIZA EL ESTADO A UNA COLECCION DE DOCUMENTOS
 exports.updateByIdCollection = (req, res) => {
   var ids = req.body.ids
   Task.find({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
