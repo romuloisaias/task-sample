@@ -200,3 +200,19 @@ exports.updateByIdCollection = (req, res) => {
     }
   })
 }
+exports.listCollection = (req, res) => {
+
+  var id = req.body.ids
+  console.log("valor"+id)
+  //res.status(200).send(id)
+  Task.find({_id: {$in: id}}, function(err, task) { //para buscar por ID
+    if (err) {
+      return res.status(500).json(err);
+    }
+    if(task){
+      return res.status(200).json(task);
+    }
+    return res.status(404).json({ msg: 'Registro no encontrado!' });
+  });
+  
+}

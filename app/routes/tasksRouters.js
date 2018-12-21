@@ -30,5 +30,6 @@ module.exports = function(app) {
     .put(List.updateByIdCollection) //lista todos por colección de IDs
 
   app.route('/tasks/status/:id')
+    .get(List.listCollection)
     .put(List.updateStatus) //update por status
 };
