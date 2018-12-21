@@ -209,7 +209,7 @@ exports.searchByTitle = (req, res) => {
     }
   }).sort({'title':-1})
 }
-exports.updateByIdCollection = (req, res) => {
+exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
   var ids = req.body._id
   var title =req.body.title || task.title
     var description =req.body.description || task.description
