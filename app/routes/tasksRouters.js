@@ -1,34 +1,31 @@
 'use strict';
 module.exports = function(app) {
-  var List = require('../controllers/tasksController.js')
-
-  app.route("/") //redirige a /tasks
-    .get(List.initPage)
+  var taskController = require('../controllers/tasksController.js')
+  
+  app.route("/")
+    .get(taskController.initPage)
 
   app.route('/tasks') // lista todos los elementos
-    .get(List.listAllTasks)
-    .post(List.createTask)
+    .get(taskController.listAllTasks)
+    .post(taskController.createTask)
 
-  app.route('/tasks/paginator/:page/:elems') //lista con paginación
-    .get(List.listPages)
+  app.route('/tasks/paginator/:page/:elements') //lista con paginación
+    .get(taskController.listPages)
 
   app.route('/tasks/:id')
-    .get(List.readTask) //lee tarea
-    .put(List.updateTask) //actualiza estatus (funciona)
-    .delete(List.deleteTask) //borra tarea
+    .get(taskController.readTask) //lee tarea
+    .put(taskController.updateTask) //actualiza estatus (funciona)
+    .delete(taskController.deleteTask) //borra tarea
 
-  //app.route('/tasks/status/:stat')
-    //.get(List.listStatusByStat) //lista filtrando por estatus
-
-  app.route('/tasks/title/:tit') //busca parecidos por titulo
-    .get(List.searchByTitle)
+  app.route('/tasks/title/:title') //busca parecidos por titulo
+    .get(taskController.searchByTitle)
 
   app.route('/tasks/listAllByStatus/:id')
-    .get(List.listAllByStatus) //lista todos por status
+    .get(taskController.listAllByStatus) //lista todos por status
 
   app.route('/tasks/updateIds/upDateByIds/')
-    .put(List.updateByIdCollection) //lista todos por colección de IDs
+    .put(taskController.updateByIdCollection) //lista todos por colección de IDs
 
   app.route('/tasks/status/:id')
-    .put(List.updateStatus) //lista todos por status
+    .put(taskController.updateStatus) //lista todos por status
 };
