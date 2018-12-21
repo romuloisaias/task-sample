@@ -203,9 +203,9 @@ exports.updateByIdCollection = (req, res) => {
 exports.listCollection = (req, res) => {
 
   var id = req.body.ids
-  console.log("valor"+id)
-  //res.status(200).send(id)
-  Task.find({_id: {$in: id}}, function(err, task) { //para buscar por ID
+  var st = req.body.status
+  Task.updateMany({_id: {$in: id}},{$set:{"status":st}}, function(err, task) {
+  //Task.find({_id: {$in: id}}, function(err, task) { //para buscar multiples por ID
     if (err) {
       return res.status(500).json(err);
     }
