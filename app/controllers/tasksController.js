@@ -76,20 +76,28 @@ exports.updateStatus = function (req, res){
 }
 
 exports.updateTask = function (req, res){
-  Task.findOne({ _id: req.params.taskId }, (err, data)=>{
+  Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
     if(!data) return res.status(404).json({msg: 'Task not found'})
     data.title = req.body.title || data.title
     data.description = req.body.description || data.description
+    if(req.body.status){
+      var normalicedStatus = req.body.status.toLowerCase()
+      if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
 
-    var normalicedStatus = req.body.status.toLowerCase()
-    if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
+      data.save((err, savedData)=>{
+        if(err) return res.status(500).json(err)
 
-    data.save((err, savedData)=>{
-      if(err) return res.status(500).json(err)
+        return res.status(200).json(savedData)
+      })
+    }else{
+      data.status = data.status
+      data.save((err, savedData)=>{
+        if(err) return res.status(500).json(err)
 
-      return res.status(200).json(savedData)
-    })
+        return res.status(200).json(savedData)
+      })
+    }
   })
 }
 
