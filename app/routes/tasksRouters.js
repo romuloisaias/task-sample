@@ -12,7 +12,7 @@ module.exports = function(app) {
   app.route('/tasks/paginator/:page/:elems') //lista con paginación
     .get(List.listPages)
 
-  app.route('/tasks/:id')
+  app.route('/tasks/:taskId')
     .get(List.readTask) //lee tarea
     .put(List.updateTask) //actualiza estatus (funciona)
     .delete(List.deleteTask) //borra tarea
@@ -30,5 +30,5 @@ module.exports = function(app) {
     .put(List.updateByIdCollection) //lista todos por colección de IDs
 
   app.route('/tasks/status/:id')
-    .put(List.updateStatus) //lista todos por status
+    .put(List.updateStatus) //update por status
 };

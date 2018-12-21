@@ -27,7 +27,7 @@ exports.createTask = function(req, res) {
     if(task){
       res.status(200).json(task);
     }else{
-      res.json("registro no se agregó")
+      res.status(500).json("registro no se agregó")
     }
   });
 };
@@ -81,8 +81,9 @@ exports.updateTask = function (req, res){
     if(!data) return res.status(404).json({msg: 'Task not found'})
     data.title = req.body.title || data.title
     data.description = req.body.description || data.description
+    data.status = req.body.status || data.status
 
-    var normalicedStatus = req.body.status.toLowerCase()
+    var normalicedStatus = data.status.toLowerCase()
     if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
 
     data.save((err, savedData)=>{
@@ -184,16 +185,18 @@ exports.searchByTitle = (req, res) => {
 }
 exports.updateByIdCollection = (req, res) => {
   var ids = req.body._id
-  Task.findOneAndUpdate({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
-    var title =req.body.title || task.title
+  var title =req.body.title || task.title
     var description =req.body.description || task.description
+  Task.updateMany({"description" : desc},{$set:"_id" in ids}, function(err, task) {
     if (err){
-      return res.status(500).json(err);
+      console.log("error")
+      res.status(500).json(err);
     }
     if(task){
+      console.log("resultado")
       res.status(200).json(task);
     }else{
-      res.json({"msj":"registro no existente"})
+      res.status(404).json({"msj":"registro no existente"})
     }
   })
 }
