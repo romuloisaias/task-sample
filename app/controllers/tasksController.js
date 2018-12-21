@@ -238,8 +238,7 @@ exports.listCollection = (req, res) => {
     if(task){
       var n = task.n
       var nModified = task.nModified
-
-      return res.status(200).json(task);
+      return res.status(200).json({Modificados:nModified});
     }
     return res.status(404).json({ msg: 'Registro no encontrado!' });
   });
