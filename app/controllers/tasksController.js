@@ -158,20 +158,38 @@ exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag,
   .then(function(count){
   var numPages = parseInt((count/regsPerPage)+1);
   });
-  Task.find({"status":st}, function(err, task) { 
-    var count = task.length;
-    if (err){
-      return res.status(500).json(err);
-    }
-    if(task){
-      res.status(200).json(task);
-    }else{
-      res.json({"msj":"registro no existente"})
-    }
-  })
-  .skip(skipPage)
-  .limit(regsPerPage)
-  .lean()
+  console.log(st)
+  if(typeof st !== "undefined"){
+    Task.find({"status":st}, function(err, task) { 
+      var count = task.length;
+      if (err){
+        return res.status(500).json(err);
+      }
+      if(task){
+        res.status(200).json(task);
+      }else{
+        res.json({"msj":"registro no existente"})
+      }
+    })
+    .skip(skipPage)
+    .limit(regsPerPage)
+    .lean()
+  }else{
+    Task.find({}, function(err, task) { 
+      var count = task.length;
+      if (err){
+        return res.status(500).json(err);
+      }
+      if(task){
+        res.status(200).json(task);
+      }else{
+        res.json({"msj":"registro no existente"})
+      }
+    })
+    .skip(skipPage)
+    .limit(regsPerPage)
+    .lean()
+  }
 }
 
 exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro hay un mainpage o index
