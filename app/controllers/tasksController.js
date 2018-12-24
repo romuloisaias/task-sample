@@ -17,7 +17,7 @@ exports.listAllTasks = function(req, res) {
     if(task){
       res.status(200).json(task)
     }else{
-      res.json({"msj":"The register not exist"})
+      res.status(404).json({"msj":"No records"})
     }
   })
 }
@@ -33,21 +33,21 @@ exports.createTask = function(req, res) {
     if(task){
       res.status(200).json(task)
     }else{
-      res.json("registro no se agregó")
+      res.status(500).json("Not saved!")
     }
   })
 }
 
 //UPDATE THE STATE, IF IT DOES NOT EXIST, IT WILL LIST AVAILABLE STATUS
 exports.updateStatus = function (req, res){
-  if(!req.params.id) res.status(500).json({msg:'ID requerido'})
+  if(!req.params.id) res.status(500).json({msg:'ID required!'})
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
     if(!data) return res.status(404).json({msg: 'Task not found'})
     var normalicedStatus = req.body.status.toLowerCase()
     var alternativeStatusRes = alternativeStatus( normalicedStatus, data.status )
     if(alternativeStatusRes){
-      return res.status(404).json({msg: 'Status not existent', suggestedStatus: alternativeStatusRes})
+      return res.status(404).json({msg: 'Status not found', suggestedStatus: alternativeStatusRes})
     }else{
       data.status = normalicedStatus
     }
@@ -65,6 +65,7 @@ exports.updateTask = function (req, res){
     if(!data) return res.status(404).json({msg: 'Task not found'})
     data.title = req.body.title || data.title
     data.description = req.body.description || data.description
+
     if(req.body.status){
       var normalicedStatus = req.body.status.toLowerCase()
       if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
@@ -78,6 +79,7 @@ exports.updateTask = function (req, res){
 
 //WILL REMOVE THE TASK THAT CORRESPONDS TO THE ID
 exports.deleteTask = function(req, res) {
+  console.log(req.params.taskId)
   Task.deleteOne({ //borra registro
     _id: req.params.id
   }, function(err, task) {
@@ -86,10 +88,10 @@ exports.deleteTask = function(req, res) {
         res.json(err)
       }
       if(task.n > 0){
-        res.status(200).json({ message: 'The removed has been successful' })
+        res.status(200).json({ message: 'Deleted!' })
       }
       if(task.n === 0){
-        res.json({ message: 'Nada borrado' })
+        res.status(404).json({ message: 'Not deleted!' })
       }
   })
 }
@@ -115,9 +117,39 @@ exports.listPages = (req, res) => {
       res.status(404).json({"msj":"The register is not found"})
     }
   })
-  .skip(skipPage)
-  .limit(regsPerPage)
-  .lean()
+  console.log(st)
+  if(typeof st !== "undefined"){
+    Task.find({"status":st}, function(err, task) { 
+      var count = task.length
+      if (err){
+        return res.status(500).json(err)
+      }
+      if(task){
+        res.status(200).json(task)
+      }else{
+        res.json({"msj":"not found"})
+      }
+    })
+    .skip(skipPage)
+    .limit(regsPerPage)
+    .lean()
+  }else{
+    Task.find({}, function(err, task) { 
+      var count = task.length
+      if (err){
+        return res.status(500).json(err)
+      }
+      if(task){
+        console.log(task)
+        res.status(200).json(task)
+      }else{
+        res.json({"msj":"not found!"})
+      }
+    })
+    .skip(skipPage)
+    .limit(regsPerPage)
+    .lean()
+  }
 }
 
 //FILTER BY TITLE
@@ -130,23 +162,42 @@ exports.searchByTitle = (req, res) => {
     if(task){
       res.status(200).json(task)
     }else{
-      res.status(404).json({"msj":"The register is not found"})
+      res.json({"msj":"not found!"})
     }
   }).sort({'title':-1})
 }
-
-//ACTUALIZA EL ESTADO A UNA COLECCION DE DOCUMENTOS
-exports.updateByIdCollection = (req, res) => {
-  var ids = req.body.ids
-  Task.find({"_id":{ $in: ids,$options:'i' }}, function(err, task) {
+exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
+  var ids = req.body._id
+  var title =req.body.title || task.title
+    var description =req.body.description || task.description
+  Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
     if (err){
+      console.log("error")
+      res.status(500).json(err)
+    }
+    if(task){
+      console.log("resultado")
+      res.status(200).json(task)
+    }else{
+      res.status(404).json({"msj":"not found!"})
+    }
+  })
+}
+exports.listCollection = (req, res) => {
+
+  var id = req.body.ids
+  var st = req.body.status
+  Task.updateMany({_id: {$in: id}},{$set:{"status":st}}, function(err, task) {
+  //Task.find({_id: {$in: id}}, function(err, task) { //para buscar multiples por ID
+    if (err) {
       return res.status(500).json(err)
     }
     if(task){
-      res.status(200).json(task)
-    }else{
-      res.json({"msj":"registro no existente"})
+      var n = task.n
+      var nModified = task.nModified
+      return res.status(200).json({modified:nModified})
     }
+    return res.status(404).json({ msg: 'not found!' })
   })
 }
 

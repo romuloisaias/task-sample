@@ -13,9 +13,9 @@ module.exports = function(app) {
   //LIST TASK WITH PAGINATION VIA GET
     .get(taskController.listPages)
 
-  app.route('/tasks/:id')
-    //UPDATE TASK VIA PUT
-    .put(taskController.updateTask)
+  app.route('/tasks/:taskId')
+    .put(taskController.updateTask) //actualiza estatus (funciona)
+    .delete(taskController.deleteTask) //borra tarea
 
     //DELETE TASK VIA DELETE
     .delete(taskController.deleteTask)
@@ -31,7 +31,6 @@ module.exports = function(app) {
     .put(taskController.updateByIdCollection)
 
   app.route('/tasks/status/:id')
-    
-    //WILL UPGRADE STATUS IN CASE OF ERROR, WILL SUGGESTED AVAILABLE STATUS
-    .put(taskController.updateStatus)
+    .get(taskController.listCollection)
+    .put(taskController.updateStatus) //update por status
 };
