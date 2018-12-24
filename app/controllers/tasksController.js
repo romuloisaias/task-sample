@@ -117,7 +117,6 @@ exports.listPages = (req, res) => {
       res.status(404).json({"msj":"The register is not found"})
     }
   })
-  console.log(st)
   if(typeof st !== "undefined"){
     Task.find({"status":st}, function(err, task) { 
       var count = task.length

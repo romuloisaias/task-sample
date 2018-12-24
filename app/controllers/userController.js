@@ -1,6 +1,6 @@
 'use strict'
 
-var User = require('../models/userModels');
+var User = require('../Models/userModels');
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../services/jwt');
 

@@ -1,7 +1,9 @@
 'use strict'
 module.exports = function(app) {
   var taskController = require('../controllers/tasksController.js')
-  
+  var md_auth = require('../middlewares/authenticated');
+//API protegida con middleware
+ app.get('/listAllTasks', md_auth.ensureAuth,taskController.listAllTasks);
   app.route("/")
     .get(taskController.initPage)
 

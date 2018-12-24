@@ -26,8 +26,10 @@ app.use(bodyParser.json())
 
 //importa las rutas para ejecutar las acciones
 var routes = require('./app/routes/tasksRouters')
+var routesUser = require('./app/routes/userRouters')
 //register the route 
 routes(app)
+routesUser(app)
 
 app.listen(port)
 
