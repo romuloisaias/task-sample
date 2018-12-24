@@ -1,10 +1,16 @@
+//DECLARATION OF VARIABLES
 'use strict'
 var mongoose = require('mongoose')
 var Task = mongoose.model('Tasks')
 var config = require('../config')
+//REDIRECT TO MAIN PAGE
+exports.initPage = (req, res) => {
+  res.status(308).redirect("/tasks")
+}
 
-exports.listAllTasks = function(req, res) { //listar todos los registros
-  Task.find({}, function(err, task) { //aqui find para buscar registro
+//LIST ALL REGISTER
+exports.listAllTasks = function(req, res) {
+  Task.find({}, function(err, task) {
     if (err){
       return res.status(500).json(err)
     }
@@ -16,9 +22,10 @@ exports.listAllTasks = function(req, res) { //listar todos los registros
   })
 }
 
+//CREATE A NEW TASK
 exports.createTask = function(req, res) {
   var newTask = new Task(req.body)
-  newTask.save(function(err, task) { //save para guardar
+  newTask.save(function(err, task) {
     if (err)
     {
       return res.status(500).json(err)
@@ -31,33 +38,12 @@ exports.createTask = function(req, res) {
   })
 }
 
-exports.readTask = function(req, res) {
-  Task.findOne({_id:req.params.id}, function(err, task) { //para buscar por ID
-    if (err) {
-      return res.status(500).json(err)
-    }
-    if(task){
-      return res.status(200).json(task)
-    }
-    return res.status(404).json({ msg: 'Not found!' })
-  })
-}
-
-function alternativeStatus(normalicedNewStatus, currentStatus){
-  var possibleStatus = config.STATUS
-  if(possibleStatus.indexOf(normalicedNewStatus) == -1){
-    var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
-    return diffStatus
-  }
-  return null
-}
-
+//UPDATE THE STATE, IF IT DOES NOT EXIST, IT WILL LIST AVAILABLE STATUS
 exports.updateStatus = function (req, res){
   if(!req.params.id) res.status(500).json({msg:'ID required!'})
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
     if(!data) return res.status(404).json({msg: 'Task not found'})
-
     var normalicedStatus = req.body.status.toLowerCase()
     var alternativeStatusRes = alternativeStatus( normalicedStatus, data.status )
     if(alternativeStatusRes){
@@ -65,7 +51,6 @@ exports.updateStatus = function (req, res){
     }else{
       data.status = normalicedStatus
     }
-
     data.save((err, savedData)=>{
       if(err) return res.status(500).json(err)
 
@@ -73,7 +58,7 @@ exports.updateStatus = function (req, res){
     })
   })
 }
-
+//UPGRADES THE FIELDS PROVIDED ALWAYS AND WHEN YOU MEET THE RULES
 exports.updateTask = function (req, res){
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
@@ -84,23 +69,15 @@ exports.updateTask = function (req, res){
     if(req.body.status){
       var normalicedStatus = req.body.status.toLowerCase()
       if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
-
-      data.save((err, savedData)=>{
-        if(err) return res.status(500).json(err)
-
-        return res.status(200).json(savedData)
-      })
-    }else{
-      data.status = data.status
-      data.save((err, savedData)=>{
-        if(err) return res.status(500).json(err)
-
-        return res.status(200).json(savedData)
-      })
     }
+    data.save((err, savedData)=>{
+      if(err) return res.status(500).json(err)
+      return res.status(200).json(savedData)
+    })
   })
 }
 
+//WILL REMOVE THE TASK THAT CORRESPONDS TO THE ID
 exports.deleteTask = function(req, res) {
   console.log(req.params.taskId)
   Task.deleteOne({ //borra registro
@@ -119,43 +96,26 @@ exports.deleteTask = function(req, res) {
   })
 }
 
-exports.listStatusByStat = function(req, res) { //listar todos los registros
-  var stats = req.params.stat.toLowerCase()
-  Task.find({status:stats}, function(err, task) { //aqui find para buscar registro
+//PAGINATOR WHIT NUMBER OF PAGE, NUMBER OF ELEMENTS AND FILTER BY STATUS
+exports.listPages = (req, res) => { 
+  var numPage = parseInt(req.params.page)
+  var regsPerPage = parseInt(req.params.elements)
+  var statusFilter = req.body.status
+  var skipPage = (numPage-1)*regsPerPage
+  Task.countDocuments()
+  .then(function(count){
+  var numPages = parseInt((count/regsPerPage)+1)
+  })
+  Task.find({"status":statusFilter}, function(err, task) { 
+    var count = task.length
     if (err){
       return res.status(500).json(err)
     }
     if(task){
       res.status(200).json(task)
     }else{
-      res.status(404).json({"msj":"no records found!"})
+      res.status(404).json({"msj":"The register is not found"})
     }
-  })
-}
-
-exports.listAllByStatus = (req,res) => {
-  if(!req.params.id) res.status(500).json({msg:'ID required'})
-  Task.findOne({ _id: req.params.id }, (err, data)=>{
-    if(err) return res.status(500).json(err)
-    if(data){
-      var possibleStatus = config.STATUS
-      var currentStatus = data.status
-      var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
-
-      res.status(200).json(diffStatus)
-    }
-  })
-}
-
-exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag, y filtro por status
-
-  var numPage = parseInt(req.params.page)
-  var regsPerPage = parseInt(req.params.elems)
-  var st = req.body.status
-  var skipPage = (numPage-1)*regsPerPage
-  Task.countDocuments()
-  .then(function(count){
-  var numPages = parseInt((count/regsPerPage)+1)
   })
   console.log(st)
   if(typeof st !== "undefined"){
@@ -192,13 +152,10 @@ exports.listPages = (req, res) => { //paginador con numero de pag, regs por pag,
   }
 }
 
-exports.initPage = (req, res) => { //aqui una redireccion para si en el futuro hay un mainpage o index
-  res.status(308).redirect("/tasks")
-}
-
+//FILTER BY TITLE
 exports.searchByTitle = (req, res) => {
-  var reqTitle = req.params.tit
-   Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) { 
+  var reqTitle = req.params.title
+   Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) {
     if (err){
       return res.status(500).json(err)
     }
@@ -242,4 +199,14 @@ exports.listCollection = (req, res) => {
     }
     return res.status(404).json({ msg: 'not found!' })
   })
+}
+
+//FUNCTION THAT PROVIDES THE STATE SUGGESTION AVAILABLE
+function alternativeStatus(normalicedNewStatus, currentStatus){
+  var possibleStatus = config.STATUS
+  if(possibleStatus.indexOf(normalicedNewStatus) == -1){
+    var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})
+    return diffStatus
+  }
+  return null
 }
