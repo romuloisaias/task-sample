@@ -7,7 +7,7 @@ var cors = require('cors');
 app.use(cors());
 
 //modelo creado carga aqui
-Task = require('./app/Models/taskModels') 
+Task = require('./app/models/taskModels') 
 bodyParser = require('body-parser')
 
 //hace la conexion mongoose para el esquema creado
