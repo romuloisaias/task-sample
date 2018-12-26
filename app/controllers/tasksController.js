@@ -11,6 +11,7 @@ exports.InitPage = (req, res) => {
 //LIST ALL REGISTER
 exports.ListAll = function(req, res) {
   Task.find({}, function(err, task) {
+    var a = 2;
     if (err){
       return res.status(500).json(err)
     }
