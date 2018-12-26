@@ -105,18 +105,24 @@ exports.listPages = (req, res) => {
   .then(function(count){
   var numPages = parseInt((count/regsPerPage)+1)
   })
-  Task.find({"status":statusFilter}, function(err, task) { 
-    var count = task.length
-    if (err){
-      return res.status(500).json(err)
-    }
-    if(task){
-      res.status(200).json(task)
-    }else{
-      res.status(404).json({"msj":"The register is not found"})
-    }
-  })
-  if(typeof statusFilter !== "undefined"){
+  var possibleStatus = config.STATUS
+  if(possibleStatus.indexOf(statusFilter) == -1){
+    Task.find({}, function(err, task) { 
+      var count = task.length
+      if (err){
+        return res.status(500).json(err)
+      }
+      if(task){
+        res.status(200).json(task)
+      }else{
+        res.status(404).json({"msj":"not found!"})
+      }
+    })
+    .skip(skipPage)
+    .limit(regsPerPage)
+    .lean()
+  }
+  else{
     Task.find({"status":statusFilter}, function(err, task) { 
       var count = task.length
       if (err){
@@ -126,21 +132,6 @@ exports.listPages = (req, res) => {
         res.status(200).json(task)
       }else{
         res.json({"msj":"not found"})
-      }
-    })
-    .skip(skipPage)
-    .limit(regsPerPage)
-    .lean()
-  }else{
-    Task.find({}, function(err, task) { 
-      var count = task.length
-      if (err){
-        return res.status(500).json(err)
-      }
-      if(task){
-        res.status(200).json(task)
-      }else{
-        res.json({"msj":"not found!"})
       }
     })
     .skip(skipPage)
