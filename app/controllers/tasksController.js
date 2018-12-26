@@ -131,11 +131,7 @@ exports.listPages = (req, res) => {
       if(task){
         res.status(200).json(task)
       }else{
-<<<<<<< HEAD
         res.json({"msj":"Task is not found!"})
-=======
-        res.json({"msj":"not found"})
->>>>>>> 06037f02f3517706944b7b5a8e6efa21137a6b1d
       }
     })
     .skip(skipPage)
