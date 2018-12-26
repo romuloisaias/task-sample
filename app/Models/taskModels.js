@@ -1,6 +1,6 @@
-'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+'use strict'
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
 var TaskSchema = new Schema({ 
   title: {
@@ -18,4 +18,4 @@ var TaskSchema = new Schema({
   }
 }, {timestamps: true});
 
-module.exports = mongoose.model('Tasks', TaskSchema); //el esquema se llama Tasks
+module.exports = mongoose.model('Tasks', TaskSchema) //el esquema se llama Tasks

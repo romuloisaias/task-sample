@@ -1,7 +1,7 @@
 'use strict'
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
 var UserSchema = Schema ({
     name: String,
@@ -13,4 +13,4 @@ var UserSchema = Schema ({
     image:String
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema)
