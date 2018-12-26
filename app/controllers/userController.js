@@ -1,4 +1,5 @@
 'use strict'
+<<<<<<< HEAD
 
 var User = require('../models/userModels');
 var bcrypt = require('bcrypt-nodejs');
@@ -22,6 +23,22 @@ function saveUser(req,res){
         user.email = params.email;
         user.role = 'ROLE_USER';
         user.image = null;
+=======
+var User = require('../Models/userModels')
+var bcrypt = require('bcrypt-nodejs')
+var jwt = require('../services/jwt')
+
+function saveUser(req,res){
+    var params = req.body
+    var user = new User()
+    if(params.name && params.surname && params.nick && params.email && params.password){
+        user.name = params.name
+        user.surname = params.surname
+        user.nick = params.nick
+        user.email = params.email
+        user.role = 'ROLE_USER'
+        user.image = null
+>>>>>>> 683cb3f82291ffa3ea362d8ee531b9727aee1e2d
         
         //Controla usuarios duplicados
         User.find({ $or: [
@@ -34,6 +51,7 @@ function saveUser(req,res){
             if(users && users.length >= 1){
                 return res.status(200).send({message:'EL usuario ya existe'})
             }else{
+<<<<<<< HEAD
 
                 bcrypt.hash(params.password, null, null,(err,hash)=>{
                     user.password = hash;
@@ -54,6 +72,23 @@ function saveUser(req,res){
         })
 
         
+=======
+                bcrypt.hash(params.password, null, null,(err,hash)=>{
+                    user.password = hash        
+                    user.save((err, userStored)=>{
+                        if(err) return res.status(500).send({message:'Error al guardar mensaje'})
+        
+                        if(userStored){
+                            user.password = undefined
+                            res.status(200).send({user:userStored})
+                        }else{
+                            res.status(404).send({message:'No se registro el usuario'})
+                        }
+                    })
+                })
+            }
+        })        
+>>>>>>> 683cb3f82291ffa3ea362d8ee531b9727aee1e2d
     }else{
         res.status(200).send({
             message:'Envia todos los campos necesarios'
@@ -62,6 +97,7 @@ function saveUser(req,res){
 }
 
 function loginUser(req, res){
+<<<<<<< HEAD
     var params = req.body;
 
     var email = params.email;
@@ -102,4 +138,38 @@ module.exports = {
     saveUser,
     loginUser,
     pruebaToken
+=======
+    var params = req.body
+    var email = params.email
+    var password = params.password
+
+    User.findOne({email:email}, (err,user)=>{
+        if(err) return res.status(500).send({message:'Error'})
+        if(user){
+            bcrypt.compare(password, user.password, (err,check)=>{        
+                if(check){
+
+                    if(params.gettoken){
+                        //generar y devolver token
+                        
+                        return res.status(200).send({
+                            token: jwt.createToken(user)
+                        })
+                    }else{
+                        user.password = undefined
+                        return res.status(200).send({user})
+                    }                    
+                }else{
+                    return res.status(404).send({message:'Logueo fallido'})
+                }
+        })
+        }else{
+            return res.status(404).send({message:'El usuario no existe'})
+        }
+    })
+}
+module.exports = {
+    saveUser,
+    loginUser
+>>>>>>> 683cb3f82291ffa3ea362d8ee531b9727aee1e2d
 }
