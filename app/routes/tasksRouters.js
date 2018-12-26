@@ -1,37 +1,37 @@
 'use strict'
 module.exports = function(app) {
+  //INCLUDES CONTROLLER
   var taskController = require('../controllers/tasksController.js')
-  var md_auth = require('../middlewares/authenticated');
-//API protegida con middleware
- app.get('/listAllTasks', md_auth.ensureAuth,taskController.listAllTasks);
-  app.route("/")
-    .get(taskController.initPage)
+  
+  //INCLUDES MIDDLEWARE PROTECTION
+  var md_auth = require('../middlewares/authenticated')
 
-  app.route('/tasks')
-    //CREATE NEW TASK VIA POST
-    .post(taskController.createTask)
+  //REDIRECT TO INIT PAGE
+  app.get('/', md_auth.ensureAuth,taskController.initPage)
 
-  app.route('/tasks/paginator/:page/:elements')
+  //LIST ALL ELEMENTS
+  app.get('/listAll', md_auth.ensureAuth,taskController.listAll)
+
+  //CREATE NEW TASK VIA POST
+  app.get('/tasks', md_auth.ensureAuth,taskController.createTask)
+
   //LIST TASK WITH PAGINATION VIA GET
-    .get(taskController.listPages)
+  app.get('/tasks/paginator/:page/:elements', md_auth.ensureAuth,taskController.listPages)
 
-  app.route('/tasks/:taskId')
-    .put(taskController.updateTask) //actualiza estatus (funciona)
+  app.get('/tasks/:id', md_auth.ensureAuth,taskController.updateTask)
 
-    //DELETE TASK VIA DELETE
-    .delete(taskController.deleteTask)
+  app.get('/tasks/:id', md_auth.ensureAuth,taskController.deleteTask)
 
-  app.route('/tasks/title/:title')
+  //FIND CONTENT IN TITLE AND LIST TAKS VIA GET
+  app.get('/tasks/title/:title', md_auth.ensureAuth,taskController.searchByTitle)
 
-    //FIND CONTENT IN TITLE AND LIST TAKS VIA GET
-    .get(taskController.searchByTitle)
+  //LIST ALL BY ID COLLECTION VIA PUT
+  app.put('/tasks/updateIds/upDateByIds', md_auth.ensureAuth,taskController.updateByIdCollection)
 
-    app.route('/tasks/updateIds/upDateByIds/')
+  app.route('/tasks/updateIds/upDateByIds/')
     
-    //LIST ALL BY ID COLLECTION VIA PUT
-    .put(taskController.updateByIdCollection)
+  app.get('/tasks/status/:id', md_auth.ensureAuth,taskController.listCollection)
 
-  app.route('/tasks/status/:id')
-    .get(taskController.listCollection)
-    .put(taskController.updateStatus) //update por status
+  app.put('/tasks/status/:id', md_auth.ensureAuth,taskController.updateStatus)
+
 };

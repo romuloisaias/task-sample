@@ -9,7 +9,7 @@ exports.initPage = (req, res) => {
 }
 
 //LIST ALL REGISTER
-exports.listAllTasks = function(req, res) {
+exports.listAll = function(req, res) {
   Task.find({}, function(err, task) {
     if (err){
       return res.status(500).json(err)
@@ -79,7 +79,6 @@ exports.updateTask = function (req, res){
 
 //WILL REMOVE THE TASK THAT CORRESPONDS TO THE ID
 exports.deleteTask = function(req, res) {
-  console.log(req.params.taskId)
   Task.deleteOne({ //borra registro
     _id: req.params.id
   }, function(err, task) {
@@ -117,8 +116,8 @@ exports.listPages = (req, res) => {
       res.status(404).json({"msj":"The register is not found"})
     }
   })
-  if(typeof st !== "undefined"){
-    Task.find({"status":st}, function(err, task) { 
+  if(typeof statusFilter !== "undefined"){
+    Task.find({"status":statusFilter}, function(err, task) { 
       var count = task.length
       if (err){
         return res.status(500).json(err)
@@ -139,7 +138,6 @@ exports.listPages = (req, res) => {
         return res.status(500).json(err)
       }
       if(task){
-        console.log(task)
         res.status(200).json(task)
       }else{
         res.json({"msj":"not found!"})
@@ -171,11 +169,9 @@ exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de docu
     var description =req.body.description || task.description
   Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
     if (err){
-      console.log("error")
       res.status(500).json(err)
     }
     if(task){
-      console.log("resultado")
       res.status(200).json(task)
     }else{
       res.status(404).json({"msj":"not found!"})
@@ -185,8 +181,8 @@ exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de docu
 exports.listCollection = (req, res) => {
 
   var id = req.body.ids
-  var st = req.body.status
-  Task.updateMany({_id: {$in: id}},{$set:{"status":st}}, function(err, task) {
+  var statusFilter = req.body.status
+  Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
   //Task.find({_id: {$in: id}}, function(err, task) { //para buscar multiples por ID
     if (err) {
       return res.status(500).json(err)
