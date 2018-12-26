@@ -1,45 +1,57 @@
-//servidor
+//IMPORT EXPRESS LIBRARY
 var express = require('express')
-app = express()
-port = process.env.PORT || 3000
 
+//IMPORT CORS LIBRARY
+var cors = require('cors')
 
-var cors = require('cors');
-app.use(cors());
-
-//modelo creado carga aqui
-
-
-Task = require('./app/models/taskModels') 
+//IMPORT BODYPARSER LIBRARY
 bodyParser = require('body-parser')
 
-//hace la conexion mongoose para el esquema creado
-
+//IMPORT MONGOOSE LIBRARY
 const mongoose = require('mongoose');
-const { Schema, connection} = mongoose;
-const DB = 'Tasks';
-const URI = `mongodb://localhost:27017/${DB}`;
 
-mongoose.Promise = global.Promise
-mongoose.connect(URI,{ useNewUrlParser: true })
-/*connect*/
+//INCLUDE MODEL CREATED
+Task = require('./app/models/taskModels') 
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-
-//importa las rutas para ejecutar las acciones
-
+//INCLUDE ROUTES
 var routes = require('./app/routes/tasksRouters')
+
+//INCLUDE USER ROUTES
 var routesUser = require('./app/routes/userRouters')
 
-//register the route 
+//INITIALIZE EXPRESS
+app = express()
+
+//DEFINED PORT TO CONNECTION
+port = process.env.PORT || 3000
+
+//USE CORS
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+app.use(function(req, res) {
+  res.status(404).send({url: req.originalUrl + ' Not found'})
+})
+
+//SCHEMA
+const { Schema, connection} = mongoose
+
+//DATABASE
+const DB = 'Tasks'
+
+//URL
+const URI = `mongodb://localhost:27017/${DB}`
+
+mongoose.Promise = global.Promise
+
+//CONNECT
+mongoose.connect(URI,{ useNewUrlParser: true })
+
+//REGISTER ROUTES
 routes(app)
 routesUser(app)
 
+//LISTEN IN PORT
 app.listen(port)
 
-app.use(function(req, res) {
-  res.status(404).send({url: req.originalUrl + ' no encontrado'})
-})
-
-console.log('servidor en: ' + port)
+console.log('Server on in port : ' + port)
