@@ -1,7 +1,7 @@
 'use strict'
 
-var jwt = require('jwt-simple');
-var secret = 'passwordCustom';
+var jwt = require('jwt-simple')
+var secret = 'SECRET_KEY_FOR_MY_TOKEN_BUILDER_26122018'
 
 
 exports.createToken = function(user){
@@ -19,6 +19,6 @@ exports.createToken = function(user){
        exp: (now+100000)
     };
 
-    return jwt.encode(payload, secret);
+    return jwt.encode(payload, secret)
     
 }

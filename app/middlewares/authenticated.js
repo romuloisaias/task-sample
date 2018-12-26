@@ -1,7 +1,8 @@
 'use strict'
 
 var jwt = require('jwt-simple')
-var secret = 'passwordCustom'
+var secret = 'SECRET_KEY_FOR_MY_TOKEN_BUILDER_26122018'
+
 
 exports.ensureAuth = function(req, res, next){
     if(!req.headers.authorization){
