@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt-nodejs')
 var jwt = require('../services/jwt')
 
 //POST USER DATA
-function saveUser(req,res){
+function SaveUser(req,res){
     var params = req.body
     var user = new User()
     if(params.name && params.surname && params.nick && params.email && params.password){
@@ -49,7 +49,7 @@ function saveUser(req,res){
 }
 
 //USER LOGIN
-function loginUser(req, res){
+function LoginUser(req, res){
     var params = req.body
     var email = params.email
     var password = params.password
@@ -63,7 +63,7 @@ function loginUser(req, res){
                     if(params.gettoken){
                         //TOKEN GENERATOR
                         return res.status(200).send({
-                            token: jwt.createToken(user)
+                            token: jwt.CreateToken(user)
                         })
 
                     }else{
@@ -80,6 +80,6 @@ function loginUser(req, res){
     })
 }
 module.exports = {
-    saveUser,
-    loginUser
+    SaveUser,
+    LoginUser
 }
