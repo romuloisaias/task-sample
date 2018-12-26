@@ -131,7 +131,7 @@ exports.listPages = (req, res) => {
       if(task){
         res.status(200).json(task)
       }else{
-        res.json({"msj":"Task not found!"})
+        res.status(404).json({"msj":"not found"})
       }
     })
     .skip(skipPage)
@@ -150,7 +150,7 @@ exports.searchByTitle = (req, res) => {
     if(task){
       res.status(200).json(task)
     }else{
-      res.json({"msj":"Task not found!"})
+      res.status(404).json({"msj":"not found!"})
     }
   }).sort({'title':-1})
 }
