@@ -14,7 +14,7 @@ var TaskSchema = new Schema({
   status: {
     type: String,
     default: "creado",
-    enum: ['created', 'in process', 'closed']
+    enum: ['creado', 'en proceso', 'cerrado']
   }
 }, {timestamps: true});
 
