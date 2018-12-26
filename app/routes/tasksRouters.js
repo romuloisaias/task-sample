@@ -7,7 +7,7 @@ module.exports = function(app) {
   var md_auth = require('../middlewares/authenticated')
 
   //REDIRECT TO INIT PAGE
-  app.get('/',taskController.initPage)
+  app.get('/',md_auth.ensureAuth,taskController.initPage)
 
   //LIST ALL ELEMENTS VIA GET
   app.get('/listAll',md_auth.ensureAuth,taskController.listAll)
