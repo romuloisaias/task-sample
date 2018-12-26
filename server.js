@@ -1,4 +1,3 @@
-//servidor
 var express = require('express')
 app = express()
 port = process.env.PORT || 3000
@@ -34,7 +33,7 @@ routesUser(app)
 app.listen(port)
 
 app.use(function(req, res) {
-  res.status(404).send({url: req.originalUrl + ' no encontrado'})
+  res.status(404).send({url: req.originalUrl + ' Not found'})
 })
 
 console.log('servidor en: ' + port)
