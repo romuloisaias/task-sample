@@ -33,7 +33,7 @@ exports.createTask = function(req, res) {
     if(task){
       res.status(200).json(task)
     }else{
-      res.status(500).json("Not saved!")
+      res.status(500).json("Record not saved!")
     }
   })
 }
@@ -87,10 +87,10 @@ exports.deleteTask = function(req, res) {
         res.json(err)
       }
       if(task.n > 0){
-        res.status(200).json({ message: 'Deleted!' })
+        res.status(200).json({ message: 'Record Deleted!' })
       }
       if(task.n === 0){
-        res.status(404).json({ message: 'Not deleted!' })
+        res.status(404).json({ message: 'Record Not deleted!' })
       }
   })
 }
@@ -115,7 +115,7 @@ exports.listPages = (req, res) => {
       if(task){
         res.status(200).json(task)
       }else{
-        res.status(404).json({"msj":"not found!"})
+        res.status(404).json({"msj":"Task not found!"})
       }
     })
     .skip(skipPage)
@@ -131,7 +131,7 @@ exports.listPages = (req, res) => {
       if(task){
         res.status(200).json(task)
       }else{
-        res.json({"msj":"Task is not found!"})
+        res.status(404).json({"msj":"not found"})
       }
     })
     .skip(skipPage)
@@ -150,7 +150,7 @@ exports.searchByTitle = (req, res) => {
     if(task){
       res.status(200).json(task)
     }else{
-      res.json({"msj":"not found!"})
+      res.status(404).json({"msj":"not found!"})
     }
   }).sort({'title':-1})
 }
@@ -165,7 +165,7 @@ exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de docu
     if(task){
       res.status(200).json(task)
     }else{
-      res.status(404).json({"msj":"not found!"})
+      res.status(404).json({"msj":"Task not found!"})
     }
   })
 }
@@ -174,7 +174,6 @@ exports.listCollection = (req, res) => {
   var id = req.body.ids
   var statusFilter = req.body.status
   Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
-  //Task.find({_id: {$in: id}}, function(err, task) { //para buscar multiples por ID
     if (err) {
       return res.status(500).json(err)
     }
@@ -183,7 +182,7 @@ exports.listCollection = (req, res) => {
       var nModified = task.nModified
       return res.status(200).json({modified:nModified})
     }
-    return res.status(404).json({ msg: 'not found!' })
+    return res.status(404).json({ msg: 'Task not found!' })
   })
 }
 

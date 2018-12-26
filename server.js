@@ -3,14 +3,14 @@ var express = require('express')
 app = express()
 port = process.env.PORT || 3000
 
-<<<<<<< HEAD
-=======
+
 var cors = require('cors');
 app.use(cors());
 
 //modelo creado carga aqui
-Task = require('./app/Models/taskModels') 
->>>>>>> 683cb3f82291ffa3ea362d8ee531b9727aee1e2d
+
+
+Task = require('./app/models/taskModels') 
 bodyParser = require('body-parser')
 
 //hace la conexion mongoose para el esquema creado
@@ -28,13 +28,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 //importa las rutas para ejecutar las acciones
-<<<<<<< HEAD
 
-var routes = require('./app/routes/userRouters')
-=======
 var routes = require('./app/routes/tasksRouters')
 var routesUser = require('./app/routes/userRouters')
->>>>>>> 683cb3f82291ffa3ea362d8ee531b9727aee1e2d
+
 //register the route 
 routes(app)
 routesUser(app)
