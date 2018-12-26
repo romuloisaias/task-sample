@@ -25,7 +25,7 @@ module.exports = function(app) {
   app.delete('/tasks/:id',md_auth.ensureAuth,taskController.deleteTask)
 
   //FIND CONTENT IN TITLE AND LIST TAKS VIA GET
-  app.get('/tasks/title/:title',taskController.searchByTitle)
+  app.get('/tasks/title/:title',md_auth.ensureAuth,taskController.searchByTitle)
 
   //LIST ALL BY ID COLLECTION VIA PUT
   app.put('/tasks/updateIds/upDateByIds',md_auth.ensureAuth,taskController.updateByIdCollection)
