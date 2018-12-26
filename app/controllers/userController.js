@@ -29,7 +29,7 @@ function SaveUser(req,res){
                 bcrypt.hash(params.password, null, null,(err,hash)=>{
                     user.password = hash        
                     user.save((err, userStored)=>{
-                        if(err) return res.status(500).send({message:'Error al guardar mensaje'})
+                        if(err) return res.status(500).send({message:err})
         
                         if(userStored){
                             user.password = undefined
