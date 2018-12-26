@@ -17,7 +17,6 @@ module.exports = function(app) {
 
   app.route('/tasks/:taskId')
     .put(taskController.updateTask) //actualiza estatus (funciona)
-    .delete(taskController.deleteTask) //borra tarea
 
     //DELETE TASK VIA DELETE
     .delete(taskController.deleteTask)

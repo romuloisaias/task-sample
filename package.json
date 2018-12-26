@@ -11,7 +11,7 @@
     "mongo",
     "node"
   ],
-  "author": "Isaias Hernandez",
+  "author": "Isaias Hernandez, Lautaro Murua, Mateo Scarafia",
   "license": "ISC",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
