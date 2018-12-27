@@ -1,1 +1,1 @@
-exports.STATUS = ['created', 'in process', 'closed']
+exports.STATUS = ['creado', 'en proceso', 'cerrado']

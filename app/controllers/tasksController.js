@@ -154,6 +154,7 @@ exports.searchByTitle = (req, res) => {
     }
   }).sort({'title':-1})
 }
+//UPDATES A COLLECTION
 exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
   //NO TOCAR LAUTARO; ESTO FUNCIONA 27-12-2018
   var ids = req.body.ids

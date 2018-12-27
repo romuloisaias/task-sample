@@ -1,7 +1,8 @@
 'use strict'
+//INCLUDE MONGOOSE LIBRARY
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-
+//SCHEMA
 var TaskSchema = new Schema({ 
   title: {
     type: String,
@@ -14,8 +15,8 @@ var TaskSchema = new Schema({
   status: {
     type: String,
     default: "creado",
-    enum: ['created', 'in process', 'closed']
+    enum: ['creado', 'en proceso', 'cerrado']
   }
 }, {timestamps: true});
-
-module.exports = mongoose.model('Tasks', TaskSchema) //el esquema se llama Tasks
+//EXPORT MODEL
+module.exports = mongoose.model('Tasks', TaskSchema)

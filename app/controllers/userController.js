@@ -21,21 +21,21 @@ function saveUser(req,res){
             {email: user.email.toLowerCase()}
 
         ]}).exec((err, users)=>{
-            if(err) return res.status(500).send({message:'Error en busqueda de usuarios'});
+            if(err) return res.status(500).send({message:'ERROR WHEN SEARCH USERS'});
         
             if(users && users.length >= 1){
-                return res.status(200).send({message:'EL usuario ya existe'})
+                return res.status(200).send({message:'THE USER ALREADY EXIST'})
             }else{
                 bcrypt.hash(params.password, null, null,(err,hash)=>{
                     user.password = hash        
                     user.save((err, userStored)=>{
-                        if(err) return res.status(500).send({message:'Error al guardar mensaje'})
+                        if(err) return res.status(500).send({message:'ERROR WHEN SAVING MESSAGE'})
         
                         if(userStored){
                             user.password = undefined
                             res.status(200).send({user:userStored})
                         }else{
-                            res.status(404).send({message:'No se registro el usuario'})
+                            res.status(404).send({message:'USER NOT REGISTERED'})
                         }
                     })
                 })
@@ -43,7 +43,7 @@ function saveUser(req,res){
         })        
     }else{
         res.status(200).send({
-            message:'Envia todos los campos necesarios'
+            message:'SEND THE REQUESTED DATA'
         })
     }
 }
@@ -71,11 +71,11 @@ function loginUser(req, res){
                         return res.status(200).send({user})
                     }                    
                 }else{
-                    return res.status(404).send({message:'Logueo fallido'})
+                    return res.status(404).send({message:'ERROR WHEN LOGIN'})
                 }
         })
         }else{
-            return res.status(404).send({message:'El usuario no existe'})
+            return res.status(404).send({message:'THE USER NOT EXIST'})
         }
     })
 }
