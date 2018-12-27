@@ -131,7 +131,7 @@ exports.listPages = (req, res) => {
       if(task){
         res.status(200).json(task)
       }else{
-        res.json({"msj":"Task not found!"})
+        res.status(404).json({"msj":"not found"})
       }
     })
     .skip(skipPage)
@@ -150,15 +150,18 @@ exports.searchByTitle = (req, res) => {
     if(task){
       res.status(200).json(task)
     }else{
-      res.json({"msj":"Task not found!"})
+      res.status(404).json({"msj":"not found!"})
     }
   }).sort({'title':-1})
 }
+//UPDATES A COLLECTION
 exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
-  var ids = req.body._id
-  var title =req.body.title || task.title
-    var description =req.body.description || task.description
-  Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
+  //NO TOCAR LAUTARO; ESTO FUNCIONA 27-12-2018
+  var ids = req.body.ids
+  //var title =req.body.title || task.title
+  var description =req.body.description
+  Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
+  //Task.updateMany({_id : {$in:ids}},{$set:{description:req.body.description}}, function(err, task) {
     if (err){
       res.status(500).json(err)
     }
@@ -173,7 +176,8 @@ exports.listCollection = (req, res) => {
 
   var id = req.body.ids
   var statusFilter = req.body.status
-  Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
+  Task.find({status: {$in: statusFilter}}, function(err, task) { 
+  //Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
     if (err) {
       return res.status(500).json(err)
     }

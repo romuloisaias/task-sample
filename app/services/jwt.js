@@ -16,7 +16,7 @@ exports.createToken = function(user){
        role: user.role,
        image: user.image,
        iat: now,
-       exp: (now+100000)
+       exp: (now+1000000)
     };
 
     return jwt.encode(payload, secret)

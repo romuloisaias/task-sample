@@ -10,7 +10,7 @@ module.exports = function(app) {
   app.get('/',md_auth.ensureAuth,taskController.initPage)
 
   //LIST ALL ELEMENTS VIA GET
-  app.get('/listAll',taskController.listAll)
+  app.get('/listAll',md_auth.ensureAuth,taskController.listAll)
 
   //CREATE NEW TASK VIA POST
   app.post('/tasks',md_auth.ensureAuth,taskController.createTask)

@@ -3,6 +3,7 @@ var User = require('../models/userModels')
 var bcrypt = require('bcrypt-nodejs')
 var jwt = require('../services/jwt')
 
+//POST USER DATA
 function saveUser(req,res){
     var params = req.body
     var user = new User()
@@ -47,6 +48,7 @@ function saveUser(req,res){
     }
 }
 
+//USER LOGIN
 function loginUser(req, res){
     var params = req.body
     var email = params.email
@@ -59,11 +61,11 @@ function loginUser(req, res){
                 if(check){
 
                     if(params.gettoken){
-                        //generar y devolver token
-                        
+                        //TOKEN GENERATOR
                         return res.status(200).send({
                             token: jwt.createToken(user)
                         })
+
                     }else{
                         user.password = undefined
                         return res.status(200).send({user})
