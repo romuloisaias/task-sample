@@ -4,12 +4,12 @@ var mongoose = require('mongoose')
 var Task = mongoose.model('Tasks')
 var config = require('../config')
 //REDIRECT TO MAIN PAGE
-exports.initPage = (req, res) => {
+exports.InitPage = (req, res) => {
   res.status(308).redirect("/tasks")
 }
 
 //LIST ALL REGISTER
-exports.listAll = function(req, res) {
+exports.ListAll = function(req, res) {
   Task.find({}, function(err, task) {
     if (err){
       return res.status(500).json(err)
@@ -23,7 +23,7 @@ exports.listAll = function(req, res) {
 }
 
 //CREATE A NEW TASK
-exports.createTask = function(req, res) {
+exports.CreateTask = function(req, res) {
   var newTask = new Task(req.body)
   newTask.save(function(err, task) {
     if (err)
@@ -39,7 +39,7 @@ exports.createTask = function(req, res) {
 }
 
 //UPDATE THE STATE, IF IT DOES NOT EXIST, IT WILL LIST AVAILABLE STATUS
-exports.updateStatus = function (req, res){
+exports.UpdateStatus = function (req, res){
   if(!req.params.id) res.status(500).json({msg:'ID required!'})
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
@@ -59,7 +59,7 @@ exports.updateStatus = function (req, res){
   })
 }
 //UPGRADES THE FIELDS PROVIDED ALWAYS AND WHEN YOU MEET THE RULES
-exports.updateTask = function (req, res){
+exports.UpdateTask = function (req, res){
   Task.findOne({ _id: req.params.id }, (err, data)=>{
     if(err) return res.status(500).json(err)
     if(!data) return res.status(404).json({msg: 'Task not found'})
@@ -78,7 +78,7 @@ exports.updateTask = function (req, res){
 }
 
 //WILL REMOVE THE TASK THAT CORRESPONDS TO THE ID
-exports.deleteTask = function(req, res) {
+exports.DeleteTask = function(req, res) {
   Task.deleteOne({ //borra registro
     _id: req.params.id
   }, function(err, task) {
@@ -96,7 +96,7 @@ exports.deleteTask = function(req, res) {
 }
 
 //PAGINATOR WHIT NUMBER OF PAGE, NUMBER OF ELEMENTS AND FILTER BY STATUS
-exports.listPages = (req, res) => { 
+exports.ListPages = (req, res) => { 
   var numPage = parseInt(req.params.page)
   var regsPerPage = parseInt(req.params.elements)
   var statusFilter = req.body.status
@@ -141,7 +141,7 @@ exports.listPages = (req, res) => {
 }
 
 //FILTER BY TITLE
-exports.searchByTitle = (req, res) => {
+exports.SearchByTitle = (req, res) => {
   var reqTitle = req.params.title
    Task.find({"title":{ $regex: reqTitle,$options:'i' }}, function(err, task) {
     if (err){
@@ -155,7 +155,7 @@ exports.searchByTitle = (req, res) => {
   }).sort({'title':-1})
 }
 //UPDATES A COLLECTION
-exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
+exports.UpdateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
   //NO TOCAR LAUTARO; ESTO FUNCIONA 27-12-2018
   var ids = req.body.ids
   //var title =req.body.title || task.title
@@ -172,7 +172,7 @@ exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de docu
     }
   })
 }
-exports.listCollection = (req, res) => {
+exports.ListCollection = (req, res) => {
 
   var id = req.body.ids
   var statusFilter = req.body.status
@@ -191,7 +191,7 @@ exports.listCollection = (req, res) => {
 }
 
 //FUNCTION THAT PROVIDES THE STATE SUGGESTION AVAILABLE
-function alternativeStatus(normalicedNewStatus, currentStatus){
+function AlternativeStatus(normalicedNewStatus, currentStatus){
   var possibleStatus = config.STATUS
   if(possibleStatus.indexOf(normalicedNewStatus) == -1){
     var diffStatus = possibleStatus.filter( fil => { return fil != currentStatus})

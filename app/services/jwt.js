@@ -4,7 +4,7 @@ var jwt = require('jwt-simple')
 var secret = 'SECRET_KEY_FOR_MY_TOKEN_BUILDER_26122018'
 
 
-exports.createToken = function(user){
+exports.CreateToken = function(user){
 
     var now = Date.now();
 
