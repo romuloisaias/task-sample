@@ -47,7 +47,7 @@ function UpdateStatus(req, res){
     if(err) return res.status(500).json(err)
     if(!data) return res.status(404).json({msg: 'Task not found'})
     var normalicedStatus = req.body.status.toLowerCase()
-    var alternativeStatusRes = alternativeStatus( normalicedStatus, data.status )
+    var alternativeStatusRes = AlternativeStatus( normalicedStatus, data.status )
     if(alternativeStatusRes){
       return res.status(404).json({msg: 'Status not found', suggestedStatus: alternativeStatusRes})
     }else{
@@ -70,7 +70,7 @@ function UpdateTask(req, res){
 
     if(req.body.status){
       var normalicedStatus = req.body.status.toLowerCase()
-      if(!alternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
+      if(!AlternativeStatus( normalicedStatus, data.status )) data.status = normalicedStatus
     }
     data.save((err, savedData)=>{
       if(err) return res.status(500).json(err)
