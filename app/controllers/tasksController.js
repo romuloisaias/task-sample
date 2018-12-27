@@ -161,7 +161,7 @@ exports.UpdateByIdCollection = (req, res) => { //actualiza una coleccion de docu
   //var title =req.body.title || task.title
   var status =req.body.status
   //Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
-  Task.updateMany({_id : {$in:ids}},{$set:{"ids.$[].status":status}}, function(err, task) {
+  Task.updateMany({_id : {$in:ids}},{$set:{"status":status}}, function(err, task) {
     if (err){
       res.status(500).json(err)
     }
