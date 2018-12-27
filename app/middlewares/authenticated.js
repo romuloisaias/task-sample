@@ -4,7 +4,7 @@ var jwt = require('jwt-simple')
 var secret = 'SECRET_KEY_FOR_MY_TOKEN_BUILDER_26122018'
 
 
-exports.ensureAuth = function(req, res, next){
+exports.EnsureAuth = function(req, res, next){
     if(!req.headers.authorization){
      return res.status(403).send({message:'ERROR: Send token in headers'})
     }

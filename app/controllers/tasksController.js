@@ -3,6 +3,7 @@
 var mongoose = require('mongoose')
 var Task = mongoose.model('Tasks')
 var config = require('../config')
+
 //REDIRECT TO MAIN PAGE
 exports.InitPage = (req, res) => {
   res.status(308).redirect("/tasks")
