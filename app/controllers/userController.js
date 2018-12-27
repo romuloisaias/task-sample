@@ -67,6 +67,7 @@ function LoginUser(req, res){
         }
     })
 }
+
 module.exports = {
     SaveUser,
     LoginUser
