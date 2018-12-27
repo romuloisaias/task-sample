@@ -17,7 +17,7 @@ function SaveUser(req,res){
         user.role = params.role
         user.image = params.image
 
-        if (params.password.length < 6) return res.status(202).send({message:'Password must be at least 6 characters long'})
+        if (params.password.length < 6) return res.status(500).send({message:'Password must be at least 6 characters long'})
         
                 bcrypt.hash(params.password, null, null,(err,hash)=>{
                     user.password = hash        
@@ -28,7 +28,7 @@ function SaveUser(req,res){
                             user.password = undefined
                             res.status(200).send({user:userStored})
                         }else{
-                            res.status(404).send({message:'No se registro el usuario'})
+                            res.status(409).send({message:'User was not registered'})
                         }
                     })
                 })
@@ -58,11 +58,11 @@ function LoginUser(req, res){
                         return res.status(200).send({user})
                     }                    
                 }else{
-                    return res.status(404).send({message:'Logueo fallido'})
+                    return res.status(404).send({message:'Login fail'})
                 }
         })
         }else{
-            return res.status(404).send({message:'El usuario no existe'})
+            return res.status(404).send({message:'User doesnt exist'})
         }
     })
 }
