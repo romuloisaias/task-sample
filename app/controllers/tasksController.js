@@ -172,6 +172,8 @@ exports.UpdateByIdCollection = (req, res) => { //actualiza una coleccion de docu
     }
   })
 }
+
+
 exports.ListCollection = (req, res) => {
 
   var id = req.body.ids
@@ -199,3 +201,4 @@ function AlternativeStatus(normalicedNewStatus, currentStatus){
   }
   return null
 }
+
