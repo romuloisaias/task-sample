@@ -155,9 +155,11 @@ exports.searchByTitle = (req, res) => {
   }).sort({'title':-1})
 }
 exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
-  var ids = req.body._id
-  var title =req.body.title || task.title
-    var description =req.body.description || task.description
+  //NO TOCAR LAUTARO; ESTO FUNCIONA 27-12-2018
+  var ids = req.body.ids
+  //var title =req.body.title || task.title
+  var description =req.body.description
+  //Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
   Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
     if (err){
       res.status(500).json(err)

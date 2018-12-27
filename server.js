@@ -1,7 +1,7 @@
 //IMPORT EXPRESS LIBRARY
 var express = require('express')
 app = express()
-port = process.env.PORT || 3002
+port = process.env.PORT || 3000
 var cors = require('cors');
 app.use(cors());
 //modelo creado carga aqui
