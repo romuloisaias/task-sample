@@ -215,6 +215,5 @@ module.exports = {
   ListPages,
   SearchByTitle,
   UpdateByIdCollection,
-  ListCollection,
-  AlternativeStatus
+  ListCollection
 }
