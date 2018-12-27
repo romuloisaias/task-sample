@@ -7,25 +7,18 @@ var jwt = require('../services/jwt')
 function SaveUser(req,res){
     var params = req.body
     var user = new User()
-    if(params.name && params.surname && params.nick && params.email && params.password){
+    
+
         user.name = params.name
         user.surname = params.surname
         user.nick = params.nick
         user.email = params.email
+        user.password = params.password
         user.role = 'ROLE_USER'
         user.image = null
-        
-        //Controla usuarios duplicados
-        User.find({ $or: [
 
-            {email: user.email.toLowerCase()}
-
-        ]}).exec((err, users)=>{
-            if(err) return res.status(500).send({message:'Error en busqueda de usuarios'});
+        if (params.password.length < 6) return res.status(202).send({message:'Password must be at least 6 characters long'})
         
-            if(users && users.length >= 1){
-                return res.status(200).send({message:'EL usuario ya existe'})
-            }else{
                 bcrypt.hash(params.password, null, null,(err,hash)=>{
                     user.password = hash        
                     user.save((err, userStored)=>{
@@ -39,15 +32,9 @@ function SaveUser(req,res){
                         }
                     })
                 })
-            }
-        })        
-    }else{
-        res.status(200).send({
-            message:'Envia todos los campos necesarios'
-        })
-    }
-}
 
+    }
+        
 //USER LOGIN
 function LoginUser(req, res){
     var params = req.body

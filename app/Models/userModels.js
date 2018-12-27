@@ -6,36 +6,26 @@ var validate = require('mongoose-validator')
 var Schema = mongoose.Schema
 
 // VALIDATORS DEFINITION
-var mailValidator = [
-  validate({
-    validator: 'isEmail',
-    message: 'Not valid email',
-  }),
-]
 
-var pwdValidator = [
-  validate({
-    validator: 'isLength',
-    arguments: [6, 50],
-    message: 'Password must be at least 6 characters long',
-  })
-]
-
-var nickValidator = [
-  validate({
-    validator: 'isLength',
-    arguments: [6, 50],
-    message: 'Nickname must be at least 6 characters long',
-  })
-]
+var validateLength = function(minLength, maxLength) {
+  minLength = minLength;
+  maxLength = maxLength;
+  return {
+    validator : function(value) {
+      if (value === undefined) return true;
+      return value.length >= minLength && value.length <= maxLength;
+    },
+    message : 'Field must be between '+ minLength +' and '+ maxLength +' characters long.'
+  }
+}
 
 // SCHEMA DEFINITION
 var UserSchema = Schema ({
     name: { type: String, required: true},
     surname: { type: String, required: true },
-    nick:{ type: String, required: true, validate: nickValidator },
-    email: { type: String, required: true, validate: mailValidator },
-    password:{ type: String, required: true, validate: pwdValidator  },
+    nick:{ type: String, required: true, validate: validateLength(6, 20) },
+    email: { type: String, required: true },
+    password:{ type: String, required: true },
     role:String,
     image:String
 }, {timestamps: true})
