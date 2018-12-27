@@ -14,8 +14,8 @@ function SaveUser(req,res){
         user.nick = params.nick
         user.email = params.email
         user.password = params.password
-        user.role = 'ROLE_USER'
-        user.image = null
+        user.role = params.role
+        user.image = params.image
 
         if (params.password.length < 6) return res.status(202).send({message:'Password must be at least 6 characters long'})
         

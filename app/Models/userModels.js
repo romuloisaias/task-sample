@@ -2,11 +2,9 @@
 
 // LIBRARY IMPORT
 var mongoose = require('mongoose')
-var validate = require('mongoose-validator')
 var Schema = mongoose.Schema
 
 // VALIDATORS DEFINITION
-
 var validateLength = function(minLength, maxLength) {
   minLength = minLength;
   maxLength = maxLength;
@@ -26,8 +24,8 @@ var UserSchema = Schema ({
     nick:{ type: String, required: true, validate: validateLength(6, 20) },
     email: { type: String, required: true },
     password:{ type: String, required: true },
-    role:String,
-    image:String
+    role:{ type: String, default: 'no role' },
+    image:{ type: String, default: 'no image' }
 }, {timestamps: true})
 
 // EXPORT SCHEMA
