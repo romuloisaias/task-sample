@@ -159,8 +159,8 @@ exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de docu
   var ids = req.body.ids
   //var title =req.body.title || task.title
   var description =req.body.description
-  //Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
-  Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
+  Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
+  //Task.updateMany({_id : {$in:ids}},{$set:{description:req.body.description}}, function(err, task) {
     if (err){
       res.status(500).json(err)
     }
@@ -175,7 +175,8 @@ exports.listCollection = (req, res) => {
 
   var id = req.body.ids
   var statusFilter = req.body.status
-  Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
+  Task.find({status: {$in: statusFilter}}, function(err, task) { 
+  //Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
     if (err) {
       return res.status(500).json(err)
     }
