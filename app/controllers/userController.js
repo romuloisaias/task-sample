@@ -8,7 +8,6 @@ function SaveUser(req,res){
 
     var params = req.body
     var user = new User()
-    
 
     user.name = params.name
     user.surname = params.surname
