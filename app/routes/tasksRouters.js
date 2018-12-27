@@ -7,7 +7,7 @@ module.exports = function(app) {
   var md_auth = require('../middlewares/authenticated')
 
   //REDIRECT TO INIT PAGE
-  app.get('/',md_auth.ensureAuth,taskController.initPage)
+  app.get('/',taskController.InitPage)
 
   //LIST ALL ELEMENTS VIA GET
   app.get('/listAll',md_auth.EnsureAuth,taskController.ListAll)
@@ -25,7 +25,7 @@ module.exports = function(app) {
   app.delete('/tasks/:id',md_auth.EnsureAuth,taskController.DeleteTask)
 
   //FIND CONTENT IN TITLE AND LIST TAKS VIA GET
-  app.get('/tasks/title/:title',md_auth.ensureAuth,taskController.searchByTitle)
+  app.get('/tasks/title/:title',md_auth.EnsureAuth,taskController.SearchByTitle)
 
   //LIST ALL BY ID COLLECTION VIA PUT
   app.put('/tasks/updateIds/upDateByIds',md_auth.EnsureAuth,taskController.UpdateByIdCollection)
