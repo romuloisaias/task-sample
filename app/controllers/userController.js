@@ -4,52 +4,40 @@ var bcrypt = require('bcrypt-nodejs')
 var jwt = require('../services/jwt')
 
 //POST USER DATA
-function saveUser(req,res){
+function SaveUser(req,res){
+
     var params = req.body
     var user = new User()
-    if(params.name && params.surname && params.nick && params.email && params.password){
-        user.name = params.name
-        user.surname = params.surname
-        user.nick = params.nick
-        user.email = params.email
-        user.role = 'ROLE_USER'
-        user.image = null
-        
-        //Controla usuarios duplicados
-        User.find({ $or: [
 
-            {email: user.email.toLowerCase()}
+    user.name = params.name
+    user.surname = params.surname
+    user.nick = params.nick
+    user.email = params.email
+    user.password = params.password
+    user.role = params.role
+    user.image = params.image
 
-        ]}).exec((err, users)=>{
-            if(err) return res.status(500).send({message:'ERROR WHEN SEARCH USERS'});
+    if (params.password.length < 6) return res.status(500).send({message:'Password must be at least 6 characters long'})
         
-            if(users && users.length >= 1){
-                return res.status(200).send({message:'THE USER ALREADY EXIST'})
-            }else{
-                bcrypt.hash(params.password, null, null,(err,hash)=>{
-                    user.password = hash        
-                    user.save((err, userStored)=>{
-                        if(err) return res.status(500).send({message:'ERROR WHEN SAVING MESSAGE'})
+        bcrypt.hash(params.password, null, null,(err,hash)=>{
+            user.password = hash        
+                user.save((err, userStored)=>{
+                  if(err) return res.status(500).send({message:err})
         
-                        if(userStored){
-                            user.password = undefined
-                            res.status(200).send({user:userStored})
-                        }else{
-                            res.status(404).send({message:'USER NOT REGISTERED'})
-                        }
-                    })
+                    if(userStored){
+                        user.password = undefined
+                        res.status(200).send({user:userStored})
+                    }else{
+                            res.status(409).send({message:'User was not registered'})
+                    }
+                    
                 })
-            }
-        })        
-    }else{
-        res.status(200).send({
-            message:'SEND THE REQUESTED DATA'
         })
-    }
-}
 
+}
+        
 //USER LOGIN
-function loginUser(req, res){
+function LoginUser(req, res){
     var params = req.body
     var email = params.email
     var password = params.password
@@ -63,7 +51,7 @@ function loginUser(req, res){
                     if(params.gettoken){
                         //TOKEN GENERATOR
                         return res.status(200).send({
-                            token: jwt.createToken(user)
+                            token: jwt.CreateToken(user)
                         })
 
                     }else{
@@ -71,15 +59,15 @@ function loginUser(req, res){
                         return res.status(200).send({user})
                     }                    
                 }else{
-                    return res.status(404).send({message:'ERROR WHEN LOGIN'})
+                    return res.status(404).send({message:'Login fail'})
                 }
         })
         }else{
-            return res.status(404).send({message:'THE USER NOT EXIST'})
+            return res.status(404).send({message:'User doesnt exist'})
         }
     })
 }
 module.exports = {
-    saveUser,
-    loginUser
+    SaveUser,
+    LoginUser
 }
