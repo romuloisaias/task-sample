@@ -5,35 +5,37 @@ var jwt = require('../services/jwt')
 
 //POST USER DATA
 function SaveUser(req,res){
+
     var params = req.body
     var user = new User()
     
 
-        user.name = params.name
-        user.surname = params.surname
-        user.nick = params.nick
-        user.email = params.email
-        user.password = params.password
-        user.role = params.role
-        user.image = params.image
+    user.name = params.name
+    user.surname = params.surname
+    user.nick = params.nick
+    user.email = params.email
+    user.password = params.password
+    user.role = params.role
+    user.image = params.image
 
-        if (params.password.length < 6) return res.status(500).send({message:'Password must be at least 6 characters long'})
+    if (params.password.length < 6) return res.status(500).send({message:'Password must be at least 6 characters long'})
         
-                bcrypt.hash(params.password, null, null,(err,hash)=>{
-                    user.password = hash        
-                    user.save((err, userStored)=>{
-                        if(err) return res.status(500).send({message:err})
+        bcrypt.hash(params.password, null, null,(err,hash)=>{
+            user.password = hash        
+                user.save((err, userStored)=>{
+                  if(err) return res.status(500).send({message:err})
         
-                        if(userStored){
-                            user.password = undefined
-                            res.status(200).send({user:userStored})
-                        }else{
+                    if(userStored){
+                        user.password = undefined
+                        res.status(200).send({user:userStored})
+                    }else{
                             res.status(409).send({message:'User was not registered'})
-                        }
-                    })
+                    }
+                    
                 })
+        })
 
-    }
+}
         
 //USER LOGIN
 function LoginUser(req, res){
