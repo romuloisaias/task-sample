@@ -6,7 +6,7 @@ var secret = 'SECRET_KEY_FOR_MY_TOKEN_BUILDER_26122018'
 
 exports.CreateToken = function(user){
 
-    var now = Date.now();
+    var thisMoment = Date.now()
 
     var payload = {
        sub: user._id,
@@ -15,8 +15,8 @@ exports.CreateToken = function(user){
        email:user.email,
        role: user.role,
        image: user.image,
-       iat: now,
-       exp: (now+1000000)
+       iat: thisMoment,
+       exp: (thisMoment+280000)
     };
 
     return jwt.encode(payload, secret)
