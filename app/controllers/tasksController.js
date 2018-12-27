@@ -155,13 +155,11 @@ exports.SearchByTitle = (req, res) => {
     }
   }).sort({'title':-1})
 }
-exports.updateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
-  //NO TOCAR LAUTARO; ESTO FUNCIONA 27-12-2018
-  var ids = req.body.ids
-  //var title =req.body.title || task.title
-  var description =req.body.description
-  Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
-  //Task.updateMany({_id : {$in:ids}},{$set:{description:req.body.description}}, function(err, task) {
+exports.UpdateByIdCollection = (req, res) => { //actualiza una coleccion de documentos por el ID
+  var ids = req.body._id
+  var title =req.body.title || task.title
+    var description =req.body.description || task.description
+  Task.updateMany({_id : ids},{$set:description in ids}, function(err, task) {
     if (err){
       res.status(500).json(err)
     }
@@ -176,12 +174,7 @@ exports.ListCollection = (req, res) => {
 
   var id = req.body.ids
   var statusFilter = req.body.status
-<<<<<<< HEAD
   Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
-=======
-  Task.find({status: {$in: statusFilter}}, function(err, task) { 
-  //Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
->>>>>>> 64edf943842efe13c4b76f459826e19e4aad63f6
     if (err) {
       return res.status(500).json(err)
     }
