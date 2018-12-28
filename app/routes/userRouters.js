@@ -14,8 +14,8 @@ module.exports = function(app) {
   app.post("/login", userController.LoginUser)
 
   //USER UPDATE
-  app.post("/update", userController.UpdateUser)
+  app.post("/update", md_auth.EnsureAuth, userController.UpdateUser)
 
   //USER FIND BY ROLE
-  app.post("/findbyrole", userController.FindByRole)
+  app.post("/findbyrole", md_auth.EnsureAuth, userController.FindByRole)
 }
