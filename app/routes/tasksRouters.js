@@ -1,38 +1,55 @@
-'use strict'
-module.exports = function(app) {
-  //INCLUDES CONTROLLER
-  var taskController = require('../controllers/tasksController.js')
-  
-  //INCLUDES MIDDLEWARE AUTHENTICATED
-  var md_auth = require('../middlewares/authenticated')
+"use strict"
 
+//INCLUDES TASK CONTROLLER
+var taskController = require("../controllers/tasksController.js")
+
+//INCLUDES MIDDLEWARE AUTHENTICATED
+var md_auth = require("../middlewares/authenticated")
+
+module.exports = function(app) {
   //REDIRECT TO INIT PAGE
-  app.get('/',md_auth.EnsureAuth,taskController.InitPage)
+  app.get("/", md_auth.EnsureAuth, taskController.InitPage)
 
   //LIST ALL ELEMENTS VIA GET
-  app.get('/listAll',md_auth.EnsureAuth,taskController.ListAll)
+  app.get("/listAll", md_auth.EnsureAuth, taskController.ListAll)
 
   //CREATE NEW TASK VIA POST
-  app.post('/tasks',md_auth.EnsureAuth,taskController.CreateTask)
+  app.post("/tasks", md_auth.EnsureAuth, taskController.CreateTask)
 
   //LIST TASK WITH PAGINATION VIA GET
-  app.get('/tasks/paginator/:page/:elements',md_auth.EnsureAuth,taskController.ListPages)
+  app.get(
+    "/tasks/paginator/:page/:elements",
+    md_auth.EnsureAuth,
+    taskController.ListPages
+  )
 
   //UPDATE RECODRS VIA PUT
-  app.put('/tasks/:id',md_auth.EnsureAuth,taskController.UpdateTask)
+  app.put("/tasks/:id", md_auth.EnsureAuth, taskController.UpdateTask)
 
   //REMOVE RECODRS VIA DELETE
-  app.delete('/tasks/:id',md_auth.EnsureAuth,taskController.DeleteTask)
+  app.delete("/tasks/:id", md_auth.EnsureAuth, taskController.DeleteTask)
 
   //FIND CONTENT IN TITLE AND LIST TAKS VIA GET
-  app.get('/tasks/title/:title',md_auth.EnsureAuth,taskController.SearchByTitle)
+  app.get(
+    "/tasks/title/:title",
+    md_auth.EnsureAuth,
+    taskController.SearchByTitle
+  )
 
   //LIST ALL BY ID COLLECTION VIA PUT
-  app.put('/tasks/updateIds/upDateByIds',md_auth.EnsureAuth,taskController.UpdateByIdCollection)
+  app.put(
+    "/tasks/updateIds/upDateByIds",
+    md_auth.EnsureAuth,
+    taskController.UpdateByIdCollection
+  )
 
   //LIST ALL RECORDS WHERE STATUS VIA GET
-  app.get('/tasks/status/:id',md_auth.EnsureAuth,taskController.ListCollection)
+  app.get(
+    "/tasks/status/:id",
+    md_auth.EnsureAuth,
+    taskController.ListCollection
+  )
 
   //WILL UPGRADE STATUS, IF NOT EXIST, WILL SUGGESTED AVAILABLE STATUS
-  app.put('/tasks/status/:id',md_auth.EnsureAuth,taskController.UpdateStatus)
-};
+  app.put("/tasks/status/:id", md_auth.EnsureAuth, taskController.UpdateStatus)
+}
