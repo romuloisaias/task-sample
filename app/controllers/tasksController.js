@@ -12,22 +12,38 @@ function InitPage(req, res) {
 //LIST ALL REGISTER
 function ListAll(req, res) {
   var val = req.params.id
-  var filter = '{_id:' + '"' + val + '"}'
-  console.log(filter)
-  Task.find({
-    filter
-  }, function (err, task) {
-    if (err) {
-      return res.status(500).json(err)
-    }
-    if (task) {
-      res.status(200).json(task)
-    } else {
-      res.status(404).json({
-        "msj": "No records"
-      })
-    }
-  })
+  console.log(val)
+  if (typeof val === "undefined") {
+    Task.find({
+
+    }, function (err, task) {
+      if (err) {
+        return res.status(500).json(err)
+      }
+      if (task) {
+        res.status(200).json(task)
+      } else {
+        res.status(404).json({
+          "msj": "No records"
+        })
+      }
+    })
+  } else {
+    Task.find({
+      _id: val
+    }, function (err, task) {
+      if (err) {
+        return res.status(500).json(err)
+      }
+      if (task) {
+        res.status(200).json(task)
+      } else {
+        res.status(404).json({
+          "msj": "No records"
+        })
+      }
+    })
+  }
 }
 
 //CREATE A NEW TASK
