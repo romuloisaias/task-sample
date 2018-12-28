@@ -29,6 +29,9 @@ function SaveUser(req, res) {
         var resuser = {
           _id: user._id,
           email: user.email,
+          nick: user.nick,
+          name: user.name,
+          role: user.role,
           token: jwt.CreateToken(user)
         }
         res.status(200).send(resuser)
