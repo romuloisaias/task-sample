@@ -100,12 +100,12 @@ function UpdateTask(req, res) {
         })
       data.title = req.body.title || data.title
       data.description = req.body.description || data.description
-
       if (req.body.status) {
         var normalicedStatus = req.body.status.toLowerCase()
-        if (!AlternativeStatus(normalicedStatus, data.status))
+        if (AlternativeStatus(normalicedStatus, data.status))
           data.status = normalicedStatus
       }
+      console.log(data.status)
       data.save((err, savedData) => {
         if (err) return res.status(500).json(err)
         return res.status(200).json(savedData)
