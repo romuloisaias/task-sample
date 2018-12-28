@@ -24,9 +24,11 @@ function ListAll(req, res) { //NO TOCAR PANITA QUE FUNCIONA DE 10
   })
 }
 
-function ListById(req, res) {  // NO TOCAR PANITA
+function ListById(req, res) { // NO TOCAR PANITA
   var id = req.params.id
-  Task.findOne({ _id: id }, function (err, task) {
+  Task.findOne({
+    _id: id
+  }, function (err, task) {
     if (err) {
       return res.status(500).json(err)
     }
@@ -90,8 +92,8 @@ function UpdateStatus(req, res) {
 //UPGRADES THE FIELDS PROVIDED ALWAYS AND WHEN YOU MEET THE RULES
 function UpdateTask(req, res) {
   Task.findOne({
-    _id: req.params.id
-  },
+      _id: req.params.id
+    },
     (err, data) => {
       if (err) return res.status(500).json(err)
       if (!data)
@@ -117,9 +119,9 @@ function UpdateTask(req, res) {
 //WILL REMOVE THE TASK THAT CORRESPONDS TO THE ID
 function DeleteTask(req, res) {
   Task.deleteOne({
-    //borra registro
-    _id: req.params.id
-  },
+      //borra registro
+      _id: req.params.id
+    },
     function (err, task) {
       if (err) {
         res.json(err)
@@ -150,26 +152,6 @@ function ListPages(req, res) {
   var possibleStatus = config.STATUS
   if (possibleStatus.indexOf(statusFilter) == -1) {
     Task.find({}, function (err, task) {
-      var count = task.length
-      if (err) {
-        return res.status(500).json(err)
-      }
-      if (task) {
-        res.status(200).json(task)
-      } else {
-        res.status(404).json({
-          msj: "Task not found!"
-        })
-      }
-    })
-      .skip(skipPage)
-      .limit(regsPerPage)
-      .lean()
-  } else {
-    Task.find({
-      status: statusFilter
-    },
-      function (err, task) {
         var count = task.length
         if (err) {
           return res.status(500).json(err)
@@ -178,11 +160,31 @@ function ListPages(req, res) {
           res.status(200).json(task)
         } else {
           res.status(404).json({
-            msj: "not found"
+            msj: "Task not found!"
           })
         }
-      }
-    )
+      })
+      .skip(skipPage)
+      .limit(regsPerPage)
+      .lean()
+  } else {
+    Task.find({
+          status: statusFilter
+        },
+        function (err, task) {
+          var count = task.length
+          if (err) {
+            return res.status(500).json(err)
+          }
+          if (task) {
+            res.status(200).json(task)
+          } else {
+            res.status(404).json({
+              msj: "not found"
+            })
+          }
+        }
+      )
       .skip(skipPage)
       .limit(regsPerPage)
       .lean()
@@ -193,11 +195,11 @@ function ListPages(req, res) {
 function SearchByTitle(req, res) {
   var reqTitle = req.params.title
   Task.find({
-    title: {
-      $regex: reqTitle,
-      $options: "i"
-    }
-  },
+      title: {
+        $regex: reqTitle,
+        $options: "i"
+      }
+    },
     function (err, task) {
       if (err) {
         return res.status(500).json(err)
@@ -224,10 +226,10 @@ function UpdateByIdCollection(req, res) {
   var status = req.body.status
   //Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
   Task.updateMany({
-    _id: {
-      $in: ids
-    }
-  }, {
+      _id: {
+        $in: ids
+      }
+    }, {
       $set: {
         "ids.$[].status": status
       }
@@ -251,10 +253,10 @@ function ListCollection(req, res) {
   var id = req.body.ids
   var statusFilter = req.body.status
   Task.find({
-    status: {
-      $in: statusFilter
-    }
-  },
+      status: {
+        $in: statusFilter
+      }
+    },
     function (err, task) {
       //Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
       if (err) {
