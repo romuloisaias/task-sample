@@ -1,5 +1,6 @@
 "use strict"
-var User = require("../models/userModels")
+
+var User = require("../models/userModel")
 var bcrypt = require("bcrypt-nodejs")
 var jwt = require("../services/jwt")
 
@@ -85,10 +86,22 @@ function UpdateUser(req, res) {
 function FindByRole(req, res) {
   var params = req.body
   User.find({ role: params.role }, (err, user) => {
-    if (err) return res.status(200).send(err)
+    if (err) return res.status(502).send(err)
     return res.status(200).send(user)
   })
 }
+
+//FIND USER BY ID
+function FindById(req, res) {
+  var params = req.body
+  User.find({ role: params._id }, (err, user) => {
+    if (err) return res.status(502).send(err)
+    return res.status(200).send(user)
+  })
+}
+
+//LOGOUT USER
+function LogOut(req, res) {}
 
 //AGGREGATE TESTER
 function AggregateTester(req, res) {
@@ -100,7 +113,7 @@ function AggregateTester(req, res) {
     err,
     result
   ) {
-    if (err) return res.status(200).send(err)
+    if (err) return res.status(502).send(err)
     return res.status(200).send(result)
   })
 }
@@ -110,5 +123,7 @@ module.exports = {
   LoginUser,
   UpdateUser,
   FindByRole,
+  FindById,
+  LogOut,
   AggregateTester
 }
