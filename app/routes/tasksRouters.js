@@ -13,7 +13,7 @@ module.exports = function (app) {
   app.get("/tasks/:page/:elements", md_auth.EnsureAuth, taskController.ListPages)
   //LIST ALL ELEMENTS VIA GET
   app.get("/tasks", md_auth.EnsureAuth, taskController.ListAll)
-  app.get("/tasks/:id", md_auth.EnsureAuth, taskController.ListAll)
+  app.get("/tasks/:id", md_auth.EnsureAuth, taskController.ListById)
 
   //CREATE NEW TASK VIA POST
   app.post("/tasks", md_auth.EnsureAuth, taskController.CreateTask)

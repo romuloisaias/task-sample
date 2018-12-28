@@ -9,62 +9,42 @@ function InitPage(req, res) {
   res.status(308).redirect("/tasks")
 }
 //LIST ALL REGISTER
-function ListAll(req, res) {
-  var val = req.params.id
-  if (typeof val === "undefined") {
-    Task.find({}, function(err, task) {
-      if (err) {
-        return res.status(500).json(err)
-      }
-      if (task) {
-        res.status(200).json(task)
-      } else {
-        res.status(404).json({
-          msj: "No records"
-        })
-      }
-    })
-  } else {
-<<<<<<< Updated upstream
-    Task.findOne({
-      _id: val
-    }, function (err, task) {
-      if (err) {
-        return res.status(500).json(err)
-      }
-      if (task) {
-        res.status(200).json(task)
-      } else {
-        res.status(404).json({
-          "msj": "No records"
-        })
-=======
-    Task.find(
-      {
-        _id: val
-      },
-      function(err, task) {
-        if (err) {
-          return res.status(500).json(err)
-        }
-        if (task) {
-          res.status(200).json(task)
-        } else {
-          res.status(404).json({
-            msj: "No records"
-          })
-        }
->>>>>>> Stashed changes
-      }
-    )
-  }
+function ListAll(req, res) { //NO TOCAR PANITA QUE FUNCIONA DE 10
+  Task.find({}, function (err, task) {
+    if (err) {
+      return res.status(500).json(err)
+    }
+    if (task) {
+      res.status(200).json(task)
+    } else {
+      res.status(404).json({
+        msj: "No records"
+      })
+    }
+  })
+}
+
+function ListById(req, res) {  // NO TOCAR PANITA
+  var id = req.params.id
+  Task.findOne({ _id: id }, function (err, task) {
+    if (err) {
+      return res.status(500).json(err)
+    }
+    if (task) {
+      res.status(200).json(task)
+    } else {
+      res.status(404).json({
+        msj: "No records"
+      })
+    }
+  })
 }
 
 //CREATE A NEW TASK
 function CreateTask(req, res) {
   if (!req.body.status) delete req.body.status
   var newTask = new Task(req.body)
-  newTask.save(function(err, task) {
+  newTask.save(function (err, task) {
     if (err) {
       return res.status(500).json(err)
     }
@@ -82,43 +62,36 @@ function UpdateStatus(req, res) {
     res.status(500).json({
       msg: "ID required!"
     })
-  Task.findOne(
-    {
-      _id: req.params.id
-    },
-    (err, data) => {
-      if (err) return res.status(500).json(err)
-      if (!data)
-        return res.status(404).json({
-          msg: "Task not found"
-        })
-      var normalicedStatus = req.body.status.toLowerCase()
-      var alternativeStatusRes = AlternativeStatus(
-        normalicedStatus,
-        data.status
-      )
-      if (alternativeStatusRes) {
-        return res.status(404).json({
-          msg: "Status not found",
-          suggestedStatus: alternativeStatusRes
-        })
-      } else {
-        data.status = normalicedStatus
-      }
-      data.save((err, savedData) => {
-        if (err) return res.status(500).json(err)
-
-        return res.status(200).json(savedData)
+  Task.findOne({
+    _id: req.params.id
+  }, (err, data) => {
+    if (err) return res.status(500).json(err)
+    if (!data)
+      return res.status(404).json({
+        msg: "Task not found"
       })
+    var normalicedStatus = req.body.status.toLowerCase()
+    var alternativeStatusRes = AlternativeStatus(normalicedStatus, data.status)
+    if (alternativeStatusRes) {
+      return res.status(404).json({
+        msg: "Status not found",
+        suggestedStatus: alternativeStatusRes
+      })
+    } else {
+      data.status = normalicedStatus
     }
-  )
+    data.save((err, savedData) => {
+      if (err) return res.status(500).json(err)
+
+      return res.status(200).json(savedData)
+    })
+  })
 }
 //UPGRADES THE FIELDS PROVIDED ALWAYS AND WHEN YOU MEET THE RULES
 function UpdateTask(req, res) {
-  Task.findOne(
-    {
-      _id: req.params.id
-    },
+  Task.findOne({
+    _id: req.params.id
+  },
     (err, data) => {
       if (err) return res.status(500).json(err)
       if (!data)
@@ -143,12 +116,11 @@ function UpdateTask(req, res) {
 
 //WILL REMOVE THE TASK THAT CORRESPONDS TO THE ID
 function DeleteTask(req, res) {
-  Task.deleteOne(
-    {
-      //borra registro
-      _id: req.params.id
-    },
-    function(err, task) {
+  Task.deleteOne({
+    //borra registro
+    _id: req.params.id
+  },
+    function (err, task) {
       if (err) {
         res.json(err)
       }
@@ -172,12 +144,12 @@ function ListPages(req, res) {
   var regsPerPage = parseInt(req.params.elements) || 3
   var statusFilter = req.body.status
   var skipPage = (numPage - 1) * regsPerPage
-  Task.countDocuments().then(function(count) {
+  Task.countDocuments().then(function (count) {
     var numPages = parseInt(count / regsPerPage + 1)
   })
   var possibleStatus = config.STATUS
   if (possibleStatus.indexOf(statusFilter) == -1) {
-    Task.find({}, function(err, task) {
+    Task.find({}, function (err, task) {
       var count = task.length
       if (err) {
         return res.status(500).json(err)
@@ -194,11 +166,10 @@ function ListPages(req, res) {
       .limit(regsPerPage)
       .lean()
   } else {
-    Task.find(
-      {
-        status: statusFilter
-      },
-      function(err, task) {
+    Task.find({
+      status: statusFilter
+    },
+      function (err, task) {
         var count = task.length
         if (err) {
           return res.status(500).json(err)
@@ -221,14 +192,13 @@ function ListPages(req, res) {
 //FILTER BY TITLE
 function SearchByTitle(req, res) {
   var reqTitle = req.params.title
-  Task.find(
-    {
-      title: {
-        $regex: reqTitle,
-        $options: "i"
-      }
-    },
-    function(err, task) {
+  Task.find({
+    title: {
+      $regex: reqTitle,
+      $options: "i"
+    }
+  },
+    function (err, task) {
       if (err) {
         return res.status(500).json(err)
       }
@@ -253,18 +223,16 @@ function UpdateByIdCollection(req, res) {
   //var title =req.body.title || task.title
   var status = req.body.status
   //Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
-  Task.updateMany(
-    {
-      _id: {
-        $in: ids
-      }
-    },
-    {
+  Task.updateMany({
+    _id: {
+      $in: ids
+    }
+  }, {
       $set: {
         "ids.$[].status": status
       }
     },
-    function(err, task) {
+    function (err, task) {
       if (err) {
         res.status(500).json(err)
       }
@@ -282,13 +250,12 @@ function UpdateByIdCollection(req, res) {
 function ListCollection(req, res) {
   var id = req.body.ids
   var statusFilter = req.body.status
-  Task.find(
-    {
-      status: {
-        $in: statusFilter
-      }
-    },
-    function(err, task) {
+  Task.find({
+    status: {
+      $in: statusFilter
+    }
+  },
+    function (err, task) {
       //Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
       if (err) {
         return res.status(500).json(err)
@@ -322,6 +289,7 @@ function AlternativeStatus(normalicedNewStatus, currentStatus) {
 module.exports = {
   InitPage,
   ListAll,
+  ListById,
   CreateTask,
   UpdateStatus,
   UpdateTask,
