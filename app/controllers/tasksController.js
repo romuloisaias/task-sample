@@ -10,6 +10,8 @@ function InitPage(req, res) {
 }
 //LIST ALL REGISTER
 function ListAll(req, res) { //NO TOCAR PANITA QUE FUNCIONA DE 10
+  var numPage = parseInt(1)
+  var regsPerPage = parseInt(3)
   Task.find({}, function (err, task) {
     if (err) {
       return res.status(500).json(err)
@@ -22,6 +24,9 @@ function ListAll(req, res) { //NO TOCAR PANITA QUE FUNCIONA DE 10
       })
     }
   })
+    .skip(skipPage)
+    .limit(regsPerPage)
+    .lean()
 }
 
 function ListById(req, res) {  // NO TOCAR PANITA
