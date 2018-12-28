@@ -9,20 +9,16 @@ var md_auth = require("../middlewares/authenticated")
 module.exports = function (app) {
   //REDIRECT TO INIT PAGE
   app.get("/", md_auth.EnsureAuth, taskController.InitPage)
-
+  //LIST TASK WITH PAGINATION VIA GET
+  app.get("/tasks/:page/:elements", md_auth.EnsureAuth, taskController.ListPages)
   //LIST ALL ELEMENTS VIA GET
-  app.get("/listAll", md_auth.EnsureAuth, taskController.ListAll)
-  app.get("/listAll/:id", md_auth.EnsureAuth, taskController.ListAll)
+  app.get("/tasks", md_auth.EnsureAuth, taskController.ListAll)
+  app.get("/tasks/:id", md_auth.EnsureAuth, taskController.ListAll)
 
   //CREATE NEW TASK VIA POST
   app.post("/tasks", md_auth.EnsureAuth, taskController.CreateTask)
 
-  //LIST TASK WITH PAGINATION VIA GET
-  app.get(
-    "/tasks/paginator/:page/:elements",
-    md_auth.EnsureAuth,
-    taskController.ListPages
-  )
+
 
   //UPDATE RECODRS VIA PUT
   app.put("/tasks/:id", md_auth.EnsureAuth, taskController.UpdateTask)

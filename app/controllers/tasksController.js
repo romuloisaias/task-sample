@@ -7,12 +7,11 @@ var config = require('../config')
 
 //REDIRECT TO MAIN PAGE
 function InitPage(req, res) {
-  res.status(308).redirect("/listAll:id")
+  res.status(308).redirect("/tasks")
 }
 //LIST ALL REGISTER
 function ListAll(req, res) {
   var val = req.params.id
-  console.log(val)
   if (typeof val === "undefined") {
     Task.find({
 
@@ -29,7 +28,7 @@ function ListAll(req, res) {
       }
     })
   } else {
-    Task.find({
+    Task.findOne({
       _id: val
     }, function (err, task) {
       if (err) {
@@ -137,8 +136,8 @@ function DeleteTask(req, res) {
 
 //PAGINATOR WHIT NUMBER OF PAGE, NUMBER OF ELEMENTS AND FILTER BY STATUS
 function ListPages(req, res) {
-  var numPage = parseInt(req.params.page)
-  var regsPerPage = parseInt(req.params.elements)
+  var numPage = parseInt(req.params.page) || 1
+  var regsPerPage = parseInt(req.params.elements) || 3
   var statusFilter = req.body.status
   var skipPage = (numPage - 1) * regsPerPage
   Task.countDocuments()
