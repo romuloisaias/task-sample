@@ -6,12 +6,13 @@ var taskController = require("../controllers/tasksController.js")
 //INCLUDES MIDDLEWARE AUTHENTICATED
 var md_auth = require("../middlewares/authenticated")
 
-module.exports = function(app) {
+module.exports = function (app) {
   //REDIRECT TO INIT PAGE
   app.get("/", md_auth.EnsureAuth, taskController.InitPage)
 
   //LIST ALL ELEMENTS VIA GET
   app.get("/listAll", md_auth.EnsureAuth, taskController.ListAll)
+  app.get("/listAll/:id", md_auth.EnsureAuth, taskController.ListAll)
 
   //CREATE NEW TASK VIA POST
   app.post("/tasks", md_auth.EnsureAuth, taskController.CreateTask)

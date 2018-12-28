@@ -7,19 +7,25 @@ var config = require('../config')
 
 //REDIRECT TO MAIN PAGE
 function InitPage(req, res) {
-  res.status(308).redirect("/tasks")
+  res.status(308).redirect("/listAll:id")
 }
-
 //LIST ALL REGISTER
 function ListAll(req, res) {
-  Task.find({}, function (err, task) {
+  var val = req.params.id
+  var filter = '{_id:' + '"' + val + '"}'
+  console.log(filter)
+  Task.find({
+    filter
+  }, function (err, task) {
     if (err) {
       return res.status(500).json(err)
     }
     if (task) {
       res.status(200).json(task)
     } else {
-      res.status(404).json({ "msj": "No records" })
+      res.status(404).json({
+        "msj": "No records"
+      })
     }
   })
 }
@@ -42,14 +48,23 @@ function CreateTask(req, res) {
 
 //UPDATE THE STATE, IF IT DOES NOT EXIST, IT WILL LIST AVAILABLE STATUS
 function UpdateStatus(req, res) {
-  if (!req.params.id) res.status(500).json({ msg: 'ID required!' })
-  Task.findOne({ _id: req.params.id }, (err, data) => {
+  if (!req.params.id) res.status(500).json({
+    msg: 'ID required!'
+  })
+  Task.findOne({
+    _id: req.params.id
+  }, (err, data) => {
     if (err) return res.status(500).json(err)
-    if (!data) return res.status(404).json({ msg: 'Task not found' })
+    if (!data) return res.status(404).json({
+      msg: 'Task not found'
+    })
     var normalicedStatus = req.body.status.toLowerCase()
     var alternativeStatusRes = AlternativeStatus(normalicedStatus, data.status)
     if (alternativeStatusRes) {
-      return res.status(404).json({ msg: 'Status not found', suggestedStatus: alternativeStatusRes })
+      return res.status(404).json({
+        msg: 'Status not found',
+        suggestedStatus: alternativeStatusRes
+      })
     } else {
       data.status = normalicedStatus
     }
@@ -62,9 +77,13 @@ function UpdateStatus(req, res) {
 }
 //UPGRADES THE FIELDS PROVIDED ALWAYS AND WHEN YOU MEET THE RULES
 function UpdateTask(req, res) {
-  Task.findOne({ _id: req.params.id }, (err, data) => {
+  Task.findOne({
+    _id: req.params.id
+  }, (err, data) => {
     if (err) return res.status(500).json(err)
-    if (!data) return res.status(404).json({ msg: 'Task not found' })
+    if (!data) return res.status(404).json({
+      msg: 'Task not found'
+    })
     data.title = req.body.title || data.title
     data.description = req.body.description || data.description
 
@@ -88,10 +107,14 @@ function DeleteTask(req, res) {
       res.json(err)
     }
     if (task.n > 0) {
-      res.status(200).json({ message: 'Record Deleted!' })
+      res.status(200).json({
+        message: 'Record Deleted!'
+      })
     }
     if (task.n === 0) {
-      res.status(404).json({ message: 'Record Not deleted!' })
+      res.status(404).json({
+        message: 'Record Not deleted!'
+      })
     }
   })
 }
@@ -109,32 +132,37 @@ function ListPages(req, res) {
   var possibleStatus = config.STATUS
   if (possibleStatus.indexOf(statusFilter) == -1) {
     Task.find({}, function (err, task) {
-      var count = task.length
-      if (err) {
-        return res.status(500).json(err)
-      }
-      if (task) {
-        res.status(200).json(task)
-      } else {
-        res.status(404).json({ "msj": "Task not found!" })
-      }
-    })
+        var count = task.length
+        if (err) {
+          return res.status(500).json(err)
+        }
+        if (task) {
+          res.status(200).json(task)
+        } else {
+          res.status(404).json({
+            "msj": "Task not found!"
+          })
+        }
+      })
       .skip(skipPage)
       .limit(regsPerPage)
       .lean()
-  }
-  else {
-    Task.find({ "status": statusFilter }, function (err, task) {
-      var count = task.length
-      if (err) {
-        return res.status(500).json(err)
-      }
-      if (task) {
-        res.status(200).json(task)
-      } else {
-        res.status(404).json({ "msj": "not found" })
-      }
-    })
+  } else {
+    Task.find({
+        "status": statusFilter
+      }, function (err, task) {
+        var count = task.length
+        if (err) {
+          return res.status(500).json(err)
+        }
+        if (task) {
+          res.status(200).json(task)
+        } else {
+          res.status(404).json({
+            "msj": "not found"
+          })
+        }
+      })
       .skip(skipPage)
       .limit(regsPerPage)
       .lean()
@@ -144,16 +172,25 @@ function ListPages(req, res) {
 //FILTER BY TITLE
 function SearchByTitle(req, res) {
   var reqTitle = req.params.title
-  Task.find({ "title": { $regex: reqTitle, $options: 'i' } }, function (err, task) {
+  Task.find({
+    "title": {
+      $regex: reqTitle,
+      $options: 'i'
+    }
+  }, function (err, task) {
     if (err) {
       return res.status(500).json(err)
     }
     if (task) {
       res.status(200).json(task)
     } else {
-      res.status(404).json({ "msj": "not found!" })
+      res.status(404).json({
+        "msj": "not found!"
+      })
     }
-  }).sort({ 'title': -1 })
+  }).sort({
+    'title': -1
+  })
 }
 
 //UPDATES A COLLECTION
@@ -163,14 +200,24 @@ function UpdateByIdCollection(req, res) { //actualiza una coleccion de documento
   //var title =req.body.title || task.title
   var status = req.body.status
   //Task.find({_id: {$in: ids}}, function(err, task) { //para buscar por ID
-  Task.updateMany({ _id: { $in: ids } }, { $set: { "ids.$[].status": status } }, function (err, task) {
+  Task.updateMany({
+    _id: {
+      $in: ids
+    }
+  }, {
+    $set: {
+      "ids.$[].status": status
+    }
+  }, function (err, task) {
     if (err) {
       res.status(500).json(err)
     }
     if (task) {
       res.status(200).json(task)
     } else {
-      res.status(404).json({ "msj": "Task not found!" })
+      res.status(404).json({
+        "msj": "Task not found!"
+      })
     }
   })
 }
@@ -178,7 +225,11 @@ function UpdateByIdCollection(req, res) { //actualiza una coleccion de documento
 function ListCollection(req, res) {
   var id = req.body.ids
   var statusFilter = req.body.status
-  Task.find({ status: { $in: statusFilter } }, function (err, task) {
+  Task.find({
+    status: {
+      $in: statusFilter
+    }
+  }, function (err, task) {
     //Task.updateMany({_id: {$in: id}},{$set:{"status":statusFilter}}, function(err, task) {
     if (err) {
       return res.status(500).json(err)
@@ -186,9 +237,13 @@ function ListCollection(req, res) {
     if (task) {
       var n = task.n
       var nModified = task.nModified
-      return res.status(200).json({ modified: nModified })
+      return res.status(200).json({
+        modified: nModified
+      })
     }
-    return res.status(404).json({ msg: 'Task not found!' })
+    return res.status(404).json({
+      msg: 'Task not found!'
+    })
   })
 }
 
@@ -196,7 +251,9 @@ function ListCollection(req, res) {
 function AlternativeStatus(normalicedNewStatus, currentStatus) {
   var possibleStatus = config.STATUS
   if (possibleStatus.indexOf(normalicedNewStatus) == -1) {
-    var diffStatus = possibleStatus.filter(fil => { return fil != currentStatus })
+    var diffStatus = possibleStatus.filter(fil => {
+      return fil != currentStatus
+    })
     return diffStatus
   }
   return null
