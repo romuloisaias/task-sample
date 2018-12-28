@@ -12,9 +12,9 @@ function SaveUser(req, res) {
   user.surname = params.surname
   user.nick = params.nick
   user.email = params.email
-  user.password = params.password
   user.role = params.role
   user.image = params.image
+  user.enabled = params.enabled
 
   if (params.password.length < 6)
     return res
@@ -25,10 +25,13 @@ function SaveUser(req, res) {
     user.password = hash
     user.save((err, userStored) => {
       if (err) return res.status(500).send({ message: err })
-
       if (userStored) {
-        user.password = undefined
-        res.status(200).send({ user: userStored })
+        var resuser = {
+          _id: user._id,
+          email: user.email,
+          token: jwt.CreateToken(user)
+        }
+        res.status(200).send(resuser)
       } else {
         res.status(409).send({ message: "User was not registered" })
       }
@@ -57,11 +60,11 @@ function LoginUser(req, res) {
             return res.status(200).send({ user })
           }
         } else {
-          return res.status(404).send({ message: "Login fail" })
+          return res.status(401).send({ message: "Login fail" })
         }
       })
     } else {
-      return res.status(404).send({ message: "User doesnt exist" })
+      return res.status(401).send({ message: "Login fail" })
     }
   })
 }
@@ -84,9 +87,25 @@ function FindByRole(req, res) {
   })
 }
 
+//AGGREGATE TESTER
+function AggregateTester(req, res) {
+  /*User.find({ role: "ROLE_USER" }, (err, user) => {
+    if (err) return res.status(200).send(err)
+    return res.status(200).send(user)
+  })*/
+  User.aggregate([{ $match: {} }, { $group: { _id: "$role" } }], function(
+    err,
+    result
+  ) {
+    if (err) return res.status(200).send(err)
+    return res.status(200).send(result)
+  })
+}
+
 module.exports = {
   SaveUser,
   LoginUser,
   UpdateUser,
-  FindByRole
+  FindByRole,
+  AggregateTester
 }

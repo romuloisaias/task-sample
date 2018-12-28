@@ -18,4 +18,7 @@ module.exports = function(app) {
 
   //USER FIND BY ROLE
   app.post("/findbyrole", md_auth.EnsureAuth, userController.FindByRole)
+
+  //AGGREGATE TESTER
+  app.get("/aggregatetester", userController.AggregateTester)
 }
