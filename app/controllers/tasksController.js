@@ -223,6 +223,8 @@ function UpdateByIdCollection(req, res) {
         return res.status(500).json(err)
       }
       if (task) {
+        var n = task.n
+        console.log(n)
         return res.status(200).json(task)
       } else {
         return res.status(404).json({

@@ -33,7 +33,7 @@ module.exports = function (app) {
   app.delete("/tasks/:id", md_auth.EnsureAuth, taskController.DeleteTask)
 
   //LIST ALL BY ID COLLECTION VIA PUT
-  app.put("/tasks/updateIds/upDateByIds", md_auth.EnsureAuth, taskController.UpdateByIdCollection)
+  app.put("/tasks/upDateByIds", md_auth.EnsureAuth, taskController.UpdateByIdCollection)
 
   //WILL UPGRADE STATUS, IF NOT EXIST, WILL SUGGESTED AVAILABLE STATUS
   app.put("/tasks/status/:id", md_auth.EnsureAuth, taskController.UpdateStatus)
